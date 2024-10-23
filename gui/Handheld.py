@@ -1,6 +1,5 @@
 import sys
 
-from PyQt5.QtGui.QIcon import pixmap
 from PyQt5.QtWidgets import QApplication, QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QMainWindow, QFrame
 from PyQt5.QtGui import QIcon, QPixmap, QPainter
 from PyQt5.QtCore import QSize

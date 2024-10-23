@@ -28,7 +28,7 @@ bullets = []
 last_direction = None
 
 # Načtení zvuku
-shoot_sound = pygame.mixer.Sound('/Users/tomasfikart/Documents/3Rocnik/Handheld/Sounds/laser-shot-ingame-230500.mp3')
+shoot_sound = pygame.mixer.Sound('../Tester/laser_shot.mp3')
 
 # Hlavní smyčka
 running = True
