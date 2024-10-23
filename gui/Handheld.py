@@ -31,9 +31,9 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         main_layout = QVBoxLayout(central_widget)  # Vertical layout for stacking two rows of buttons
 
         # lower buttons setup
-        lower_layout = QHBoxLayout(central_widget)  #sets all self.(QWidget) widgets horizontally and every child of the class QWidget
+        lower_layout = QHBoxLayout()  #sets all self.(QWidget) widgets horizontally and every child of the class QWidget
                                                     #widget1   widget2   widget3# widgets can be buttons in form of picture or whatever
-        lower_layout.setContentsMargins(50, 100, 50, 50) #sets spaces between widgets(left, top, right, bottom)
+        lower_layout.setContentsMargins(50, 30, 50, 50) #sets spaces between widgets(left, top, right, bottom)
                                                                         #100px
                                                         # 50px widget1   widget2   widget3 50px #
                                                                         #50px
@@ -41,7 +41,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
 
         # upper buttons setup
         upper_layout = QHBoxLayout()
-        upper_layout.setContentsMargins(50, 50, 50, 0)
+        upper_layout.setContentsMargins(50, 30, 50, 0)
         upper_layout.setSpacing(15)
 
         # adding both lower and upper buttons to main_layout
@@ -50,13 +50,13 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
 
         # List of menu icons
         self.icons = ['icons/SpaceShooterIcon.png',
-                      'icons/zarovka.png',
-                      'icons/zarovka.png',
-                      'icons/zarovka.png']  #paths to pictures used as buttons later in the code
+                      'icons/cube.png',
+                      'icons/code.png',
+                      'icons/reconstruction.png']  #paths to pictures used as buttons later in the code
         # List of small buttons (icons)
-        self.small_icons = ['icons/zarovka.png',
-                            'icons/zarovka.png',
-                            'icons/zarovka.png']  # Paths for small buttons
+        self.small_icons = ['icons/reconstruction.png',
+                            'icons/reconstruction.png',
+                            'icons/reconstruction.png']  # Paths for small buttons
 
         # List of games
         self.games = ['../games/SpaceShooter/game_files/main.py', '../games/Tester/Handheld_tester.py', '../gui/Handheld.py',''] # source of the game .exe (indexes decides which one to start so order matters)
@@ -64,8 +64,11 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         # List of menu buttons
         self.menu = [] # starts the code of the menu
 
-        # Path to the gui
+        # Path to the gui(from this file we navigate to the game/gui files)
         self.gui_path = getcwd()
+
+        # enum = number which represents state of the code (menu = 0, game = 1, menu_settings = 2)
+        self.enum = 0
 
         # Store buttons for easy access
         self.buttons = [] #list of all QPushButton(adding all buttons to this list)
@@ -112,18 +115,22 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
     def on_game_menu_item_clicked(self, idx):
         game_path = self.games[idx]  # initialise index of the game
         try:
+            self.enum = 1
             os.chdir(os.path.dirname(game_path))
             subprocess.run(["python", os.path.basename(game_path)])
-            os.chdir(self.gui_path)                                     #
+            os.chdir(self.gui_path)
+            self.enum = 0
         except Exception as e: # in case of error
             print(f"Chyba při spuštění hry: {e}")
 
     def on_menu_item_clicked(self, idx):
         menu_action = self.menu[idx]  # initialise index of the game
         try:
+            self.enum = 2
             os.chdir(os.path.dirname(menu_action))                      #os.path.dirname = everything except the last part of the path to the file
             subprocess.run(["python", os.path.basename(menu_action)])   #os.path.basename = last part of file path
-            os.chdir(self.gui_path)
+            self.chdir = os.chdir(self.gui_path)
+            self.enum = 0
         except Exception as e: # in case of error
             print(f"Chyba při spuštění menu: {e}")
 
@@ -155,6 +162,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         # Draw the background image
         scaled_pixmap = self.pixmap.scaled(self.size(), aspectRatioMode=1)
         painter.drawPixmap(0, 0, scaled_pixmap)
+
 # Main application
 if __name__ == '__main__':
     app = QApplication(sys.argv)
