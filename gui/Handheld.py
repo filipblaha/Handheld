@@ -110,14 +110,16 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         try:
             os.chdir(os.path.dirname(game_path))
             subprocess.run(["python", os.path.basename(game_path)])
+            os.chdir('gui')
         except Exception as e: # in case of error
             print(f"Chyba při spuštění hry: {e}")
 
     def on_menu_item_clicked(self, idx):
         menu_action = self.menu[idx]  # initialise index of the game
         try:
-            os.chdir(os.path.dirname(menu_action))
-            subprocess.run(["python", os.path.basename(menu_action)])
+            os.chdir(os.path.dirname(menu_action))                      #os.path.dirname = everything except the last part of the path to the file
+            subprocess.run(["python", os.path.basename(menu_action)])   #os.path.basename = last part of file path
+            os.chdir('../../gui')
         except Exception as e: # in case of error
             print(f"Chyba při spuštění menu: {e}")
 
