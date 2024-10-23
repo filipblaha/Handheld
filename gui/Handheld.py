@@ -1,4 +1,5 @@
 import sys
+from os import getcwd
 
 from PyQt5.QtWidgets import QApplication, QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QMainWindow
 from PyQt5.QtGui import QIcon, QPixmap, QPainter
@@ -63,6 +64,9 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         # List of menu buttons
         self.menu = [] # starts the code of the menu
 
+        # Path to the gui
+        self.gui_path = getcwd()
+
         # Store buttons for easy access
         self.buttons = [] #list of all QPushButton(adding all buttons to this list)
 
@@ -110,7 +114,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         try:
             os.chdir(os.path.dirname(game_path))
             subprocess.run(["python", os.path.basename(game_path)])
-            os.chdir('gui')
+            os.chdir(self.gui_path)                                     #
         except Exception as e: # in case of error
             print(f"Chyba při spuštění hry: {e}")
 
@@ -119,7 +123,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         try:
             os.chdir(os.path.dirname(menu_action))                      #os.path.dirname = everything except the last part of the path to the file
             subprocess.run(["python", os.path.basename(menu_action)])   #os.path.basename = last part of file path
-            os.chdir('../../gui')
+            os.chdir(self.gui_path)
         except Exception as e: # in case of error
             print(f"Chyba při spuštění menu: {e}")
 
