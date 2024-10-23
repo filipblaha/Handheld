@@ -1,6 +1,6 @@
 import sys
 
-from PyQt5.QtWidgets import QApplication, QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QMainWindow, QFrame
+from PyQt5.QtWidgets import QApplication, QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QMainWindow
 from PyQt5.QtGui import QIcon, QPixmap, QPainter
 from PyQt5.QtCore import QSize
 import subprocess
@@ -11,7 +11,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         super().__init__()
 
         # Window settings
-        self.setFixedSize(800, 500)
+        self.setFixedSize(800, 450)             #Size of the window
         self.setWindowTitle('Handheld menu')    #Title of the window
         self.setGeometry(100, 100, 800, 400)    #First number = position of window in ur screen(pixels from left)
                                                 #Second number = position of window in ur screen(pixels from top)
@@ -58,7 +58,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
                             'icons/zarovka.png']  # Paths for small buttons
 
         # List of games
-        self.games = ['../games/Tester/Handheld_tester.py', '../games/SpaceShooter/game_files/main.py', '../gui/Handheld.py',''] # source of the game .exe (indexes decides which one to start so order matters)
+        self.games = ['../games/SpaceShooter/game_files/main.py', '../games/Tester/Handheld_tester.py', '../gui/Handheld.py',''] # source of the game .exe (indexes decides which one to start so order matters)
 
         # List of menu buttons
         self.menu = [] # starts the code of the menu
