@@ -81,7 +81,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
             btn.setFixedSize(100, 100) #width and height of the button
             btn.setStyleSheet("border: none; background-color: transparent;")
 
-            btn.clicked.connect(lambda _, idx=i: self.on_game_menu_item_clicked(idx)) #activating the on menu item clicked function
+            btn.clicked.connect(lambda _, idx=i: self.on_game_item_clicked(idx)) #activating the on menu item clicked function
 
             self.buttons.append(btn) #adds button to self.buttons list
 
@@ -100,7 +100,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
             btn.setStyleSheet("border: none; background-color: transparent;")
 
             btn.clicked.connect(
-                lambda _, idx=i: self.on_game_menu_item_clicked(idx))  # activating the on menu item clicked function
+                lambda _, idx=i: self.on_menu_item_clicked(idx))  # activating the on menu item clicked function
 
             self.buttons.append(btn)  # adds button to self.buttons list
 
@@ -112,7 +112,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
             upper_layout.addWidget(btn)
     # On click event
 
-    def on_game_menu_item_clicked(self, idx):
+    def on_game_item_clicked(self, idx):
         game_path = self.games[idx]  # initialise index of the game
         try:
             self.enum = 1
