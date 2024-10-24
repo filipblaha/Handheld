@@ -51,18 +51,18 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         # List of menu icons
         self.icons = ['icons/SpaceShooterIcon.png',
                       'icons/cube.png',
-                      'icons/code.png',
+                      'icons/reconstruction.png',
                       'icons/reconstruction.png']  #paths to pictures used as buttons later in the code
         # List of small buttons (icons)
-        self.small_icons = ['icons/reconstruction.png',
+        self.small_icons = ['icons/code.png',
                             'icons/reconstruction.png',
                             'icons/reconstruction.png']  # Paths for small buttons
 
         # List of games
-        self.games = ['../games/SpaceShooter/game_files/main.py', '../games/Tester/Handheld_tester.py', '../gui/Handheld.py',''] # source of the game .exe (indexes decides which one to start so order matters)
+        self.games = ['../games/SpaceShooter/game_files/main.py', '../games/Tester/Handheld_tester.py', '',''] # source of the game .exe (indexes decides which one to start so order matters)
 
         # List of menu buttons
-        self.menu = [] # starts the code of the menu
+        self.menu = ['../gui/Handheld.py','',''] # starts the code of the menu
 
         # Path to the gui(from this file we navigate to the game/gui files)
         self.gui_path = getcwd()
@@ -116,10 +116,12 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         game_path = self.games[idx]  # initialise index of the game
         try:
             self.enum = 1
+            print(self.enum)
             os.chdir(os.path.dirname(game_path))
             subprocess.run(["python", os.path.basename(game_path)])
             os.chdir(self.gui_path)
             self.enum = 0
+            print(self.enum)
         except Exception as e: # in case of error
             print(f"Chyba při spuštění hry: {e}")
 
@@ -129,7 +131,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
             self.enum = 2
             os.chdir(os.path.dirname(menu_action))                      #os.path.dirname = everything except the last part of the path to the file
             subprocess.run(["python", os.path.basename(menu_action)])   #os.path.basename = last part of file path
-            self.chdir = os.chdir(self.gui_path)
+            os.chdir(self.gui_path)
             self.enum = 0
         except Exception as e: # in case of error
             print(f"Chyba při spuštění menu: {e}")
