@@ -23,17 +23,22 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         super().__init__()
 
         # Window settings
-        self.setFixedSize(800, 450)             #Size of the window
+        self.window_width = 800
+        self.window_height = 450
+        self.setFixedSize(self.window_width, self.window_height)             #Size of the window
         self.setWindowTitle('Handheld menu')    #Title of the window
+
         #self.setWindowFlags(Qt.FramelessWindowHint) # Hides all outlines and top bar of window
         self.setGeometry(350, 200, 200, 200)    #First number = position of window in ur screen(pixels from left)
                                                 #Second number = position of window in ur screen(pixels from top)
                                                 #Third number = position of window in ur screen(pixels from right)
                                                 #Forth number = position of window in ur screen(pixels from bottom)
+
         self.pixmap = QPixmap('../games/SpaceShooter/game_files/assets/animations/background/Background1.png')
                                                             #sets color of background background-color: #1e1e1e;
                                                             #for custom background picture background-color: => background-image:
                                                             #we can modify the picture here(position, repeating, ...)
+
         # centers widgets
         central_widget = QWidget(self) # creates a widget
         self.setCentralWidget(central_widget) # centers the widget
@@ -41,11 +46,6 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
 
         # Main vertical layout (two horizontal layouts inside)
         main_layout = QVBoxLayout(central_widget)  # Vertical layout for stacking two rows of buttons
-
-        # upper buttons setup
-        upper_layout = QHBoxLayout()
-        upper_layout.setContentsMargins(0, 120, 0, 0) #sets spaces between widgets(left, top, right, bottom)
-        upper_layout.setSpacing(0)
 
         # lower buttons setup
         # Scroll area for the slider
@@ -65,12 +65,8 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
 
         lower_layout = QHBoxLayout(scroll_widget)  #sets all self.(QWidget) widgets horizontally and every child of the class QWidget
                                                     #widget1   widget2   widget3# widgets can be buttons in form of picture or whatever
-        lower_layout.setContentsMargins(0, 0, 0, 225) #sets spaces between widgets(left, top, right, bottom)
-                                                                        #100px
-                                                        # 50px widget1   widget2   widget3 50px #
-                                                                        #50px
-
-        lower_layout.setSpacing(0)  #widget1 20px widget2 20px widget3#
+        # upper layout creation
+        upper_layout = QHBoxLayout()
 
         # adding both lower and upper buttons to main_layout (order matters)
         main_layout.addLayout(upper_layout)
@@ -101,13 +97,28 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         # Store buttons for easy access
         self.buttons = [] #list of all QPushButton(adding all buttons to this list)
 
+        # lower button mathing (scaling)
+        self.lower_button_spacing = int(self.window_width/13.33333)
+        self.lower_button_width = int(self.window_width / 8)
+        self.lower_button_height = int(self.window_height / 4.8)
+        self.lower_button_icon_width = int(self.window_width / 12.5)
+        self.lower_button_icon_height = int(self.window_height / 7.03125)
+
+        # lower layout setup
+        lower_layout.setContentsMargins(0, 0, 110, 210) #sets spaces between widgets(left, top, right, bottom)
+                                                                        #100px
+                                                        # 50px widget1   widget2   widget3 50px #
+                                                                        #50px
+        lower_layout.addStretch(1)
+        lower_layout.setSpacing(self.lower_button_spacing)  #widget1 20px widget2 20px widget3#
+
         # Connecting icons to game.exe files with index i = specific number of every picture(button)
         for i, icon in enumerate(self.lower_layout_icons):
             btn = QPushButton(self) #creates a button
             btn.setIcon(QIcon(icon)) #sets visuals of the button to picture from icon list
-            btn.setIconSize(QSize(64, 64)) #scales the picture
-            btn.setFixedSize(100, 100) #width and height of the button
-            btn.setStyleSheet("border: none; background-color: blue;")
+            btn.setIconSize(QSize(self.lower_button_icon_width, self.lower_button_icon_height)) #scales the picture
+            btn.setFixedSize(self.lower_button_width, self.lower_button_height) #width and height of the button
+            btn.setStyleSheet("border: none; background-color: red;")
 
             btn.clicked.connect(lambda _, idx=i: self.on_game_item_clicked(idx)) #activating the on menu item clicked function
 
@@ -120,15 +131,26 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
             # adding button to lower layout widget list
             lower_layout.addWidget(btn)
 
+        # upper buttons mathing (scaling)
+        self.upper_button_spacing = int(self.window_width/26.666666)
+        self.upper_button_width = int(self.window_width / 16)
+        self.upper_button_height = int(self.window_height / 9.6)
+        self.upper_button_icon_width = int(self.window_width / 26.666666)
+        self.upper_button_icon_height = int(self.window_height / 15)
+
+        # upper buttons setup
+        upper_layout.addStretch(1)
+        upper_layout.setContentsMargins(0, 100, 280, 0) #sets spaces between widgets(left, top, right, bottom)
+        upper_layout.setSpacing(self.upper_button_spacing)
+
         for i, icon in enumerate(self.upper_layout_icons):
             btn = QPushButton(self)  # creates a button
             btn.setIcon(QIcon(icon))  # sets visuals of the button to picture from icon list
-            btn.setIconSize(QSize(30, 30))  # scales the picture
-            btn.setFixedSize(50, 50)  # width and height of the button
-            btn.setStyleSheet("border: none; background-color: red;")
+            btn.setIconSize(QSize(self.upper_button_icon_width, self.upper_button_icon_height))  # scales the picture
+            btn.setFixedSize(self.upper_button_width, self.upper_button_height)  # width and height of the button
+            btn.setStyleSheet("border: none; background-color: blue;")
 
-            btn.clicked.connect(
-                lambda _, idx=i: self.on_menu_item_clicked(idx))  # activating the on menu item clicked function
+            btn.clicked.connect(lambda _, idx=i: self.on_menu_item_clicked(idx))  # activating the on menu item clicked function
 
             self.buttons.append(btn)  # adds button to self.buttons list
 
