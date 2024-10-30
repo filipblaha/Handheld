@@ -103,6 +103,10 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         self.lower_button_height = int(self.window_height / 4.8)
         self.lower_button_icon_width = int(self.window_width / 12.5)
         self.lower_button_icon_height = int(self.window_height / 7.03125)
+        self.lower_button_top_limit = 0
+        self.lower_button_left_limit = 0
+        self.lower_button_right_limit = 0
+        self.lower_button_bottom_limit = 0
 
         # lower layout setup
         lower_layout.setContentsMargins(0, 0, 110, 210) #sets spaces between widgets(left, top, right, bottom)
@@ -137,6 +141,10 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         self.upper_button_height = int(self.window_height / 9.6)
         self.upper_button_icon_width = int(self.window_width / 26.666666)
         self.upper_button_icon_height = int(self.window_height / 15)
+        self.upper_button_top_limit = 0
+        self.upper_button_left_limit = 0
+        self.upper_button_right_limit = 0
+        self.upper_button_bottom_limit = 0
 
         # upper buttons setup
         upper_layout.addStretch(1)
