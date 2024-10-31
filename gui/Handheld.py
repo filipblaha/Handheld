@@ -73,14 +73,17 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         main_layout.addWidget(scroll_area)
 
         # List of menu icons
-        self.lower_layout_icons = ['icons/SpaceShooterIcon.png',
+        self.lower_layout_icon = ['icons/SpaceShooterIcon.png',
                       'icons/cube.png',
                       'icons/reconstruction.png',
                       'icons/reconstruction.png']  #paths to pictures used as buttons later in the code
+        self.lower_layout_icon_count = len(self.lower_layout_icon) # nuumber of icons in the list of lower layout
+
         # List of small buttons (icons)
-        self.upper_layout_icons = ['icons/code.png',
+        self.upper_layout_icon = ['icons/code.png',
                             'icons/reconstruction.png',
                             'icons/reconstruction.png']  # Paths for small buttons
+        self.upper__layout_icon_count = len(self.upper_layout_icon)
 
         # List of games
         self.games = ['../games/SpaceShooter/game_files/main.py', '../games/Tester/Handheld_tester.py', '',''] # source of the game .exe (indexes decides which one to start so order matters)
@@ -103,13 +106,16 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         self.lower_button_height = int(self.window_height / 4.8)
         self.lower_button_icon_width = int(self.window_width / 12.5)
         self.lower_button_icon_height = int(self.window_height / 7.03125)
-        self.lower_button_top_limit = 0
-        self.lower_button_left_limit = 0
-        self.lower_button_right_limit = 0
-        self.lower_button_bottom_limit = 0
-
+        self.lower_button_top_limit = int((2/6)*self.window_height)
+        self.lower_button_left_limit = int((self.window_width - (self.lower_button_width * self.lower_layout_icon_count +
+                                                             self.lower_button_spacing * (self.lower_layout_icon_count-1)))/2)
+        self.lower_button_right_limit = int((self.window_width - (self.lower_button_width * self.lower_layout_icon_count +
+                                                             self.lower_button_spacing * (self.lower_layout_icon_count-1)))/2)
+        self.lower_button_bottom_limit = int((2/6)*self.window_height)
+        print(self.lower_button_bottom_limit)
         # lower layout setup
-        lower_layout.setContentsMargins(0, 0, 110, 210) #sets spaces between widgets(left, top, right, bottom)
+        lower_layout.setContentsMargins(self.lower_button_left_limit, 0, self.lower_button_right_limit, self.lower_button_bottom_limit)
+                                                #sets spaces between widgets(left, top, right, bottom)
                                                                         #100px
                                                         # 50px widget1   widget2   widget3 50px #
                                                                         #50px
@@ -117,7 +123,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         lower_layout.setSpacing(self.lower_button_spacing)  #widget1 20px widget2 20px widget3#
 
         # Connecting icons to game.exe files with index i = specific number of every picture(button)
-        for i, icon in enumerate(self.lower_layout_icons):
+        for i, icon in enumerate(self.lower_layout_icon):
             btn = QPushButton(self) #creates a button
             btn.setIcon(QIcon(icon)) #sets visuals of the button to picture from icon list
             btn.setIconSize(QSize(self.lower_button_icon_width, self.lower_button_icon_height)) #scales the picture
@@ -151,7 +157,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         upper_layout.setContentsMargins(0, 100, 280, 0) #sets spaces between widgets(left, top, right, bottom)
         upper_layout.setSpacing(self.upper_button_spacing)
 
-        for i, icon in enumerate(self.upper_layout_icons):
+        for i, icon in enumerate(self.upper_layout_icon):
             btn = QPushButton(self)  # creates a button
             btn.setIcon(QIcon(icon))  # sets visuals of the button to picture from icon list
             btn.setIconSize(QSize(self.upper_button_icon_width, self.upper_button_icon_height))  # scales the picture
