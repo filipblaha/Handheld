@@ -2,8 +2,8 @@ import sys
 from os import getcwd
 
 from PyQt5.QtWidgets import QApplication, QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QMainWindow, QScrollArea
-from PyQt5.QtGui import QIcon, QPixmap, QPainter
-from PyQt5.QtCore import QSize, Qt
+from PyQt5.QtGui import QIcon, QPixmap, QPainter, QTouchEvent, QMouseEvent
+from PyQt5.QtCore import QSize, Qt, QEvent
 import subprocess
 import os
 
@@ -38,6 +38,8 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
                                                             #sets color of background background-color: #1e1e1e;
                                                             #for custom background picture background-color: => background-image:
                                                             #we can modify the picture here(position, repeating, ...)
+        # code enabling to be controlled by touch (touch screen support)
+        self.setAttribute(Qt.WA_AcceptTouchEvents, True)
 
         # centers widgets
         central_widget = QWidget(self) # creates a widget
@@ -109,7 +111,6 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         self.lower_button_top_limit = int((2/6)*self.window_height)
         self.lower_button_left_limit = int((self.window_width - (self.lower_button_width * self.lower_layout_icon_count +
                                                              self.lower_button_spacing * (self.lower_layout_icon_count-1)))/2)
-                                                                    # -12 because for some reason the math isnt mathing
         self.lower_button_right_limit = int((self.window_width - (self.lower_button_width * self.lower_layout_icon_count +
                                                              self.lower_button_spacing * (self.lower_layout_icon_count-1)))/2)
         self.lower_button_bottom_limit = int((2/6)*self.window_height)
@@ -151,7 +152,6 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         self.upper_button_left_limit = int((self.window_width - (self.upper_button_width * self.upper_layout_icon_count +
                                                              self.upper_button_spacing * (self.upper_layout_icon_count-1)))/2)
         self.upper_button_top_limit = int((1/5)*self.window_height)
-                                                                    # -12 because for some reason the math isnt mathing
         self.upper_button_right_limit = int((self.window_width - (self.upper_button_width * self.upper_layout_icon_count +
                                                              self.upper_button_spacing * (self.upper_layout_icon_count-1)))/2)
         self.upper_button_bottom_limit = int((2/6)*self.window_height)
@@ -185,12 +185,10 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         game_path = self.games[idx]  # initialise index of the game
         try:
             self.enum = 1
-
             os.chdir(os.path.dirname(game_path))
             subprocess.run(["python", os.path.basename(game_path)])
             os.chdir(self.gui_path)
             self.enum = 0
-
         except Exception as e: # in case of error
             print(f"Chyba při spuštění hry: {e}")
 
@@ -205,24 +203,42 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         except Exception as e: # in case of error
             print(f"Chyba při spuštění menu: {e}")
 
+    # defining actions performed by style of touch (touch screen support)
+    def touchEvent(self, event: QTouchEvent):
+        for touch_point in event.touchPoints():
+            # performs this code on press of finger
+            if touch_point.state() == Qt.TouchPointPressed:
+                mouse_event_press = QMouseEvent(QEvent.Type.MouseButtonPress, touch_point.pos(), Qt.LeftButton,
+                                                Qt.LeftButton, Qt.NoModifier)
+                QApplication.sendEvent(self, mouse_event_press)
+            # performs this code on release of finger
+            elif touch_point.state() == Qt.TouchPointReleased:
+                mouse_event_release = QMouseEvent(QEvent.Type.MouseButtonRelease, touch_point.pos(), Qt.LeftButton,
+                                                  Qt.LeftButton, Qt.NoModifier)
+                QApplication.sendEvent(self, mouse_event_release)
+            # performs this code if we slide over a screen with a finger
+            elif touch_point.state() == Qt.TouchPointMoved:
+                print(f"Touch moved to {touch_point.pos()}")
+        event.accept()  # Mark the event as handled
+
     # Entry animation on hover
     def on_lower_hover_enter(self, button):
         button.setIconSize(QSize(int(self.lower_button_icon_width*1.2), int(self.lower_button_height*1.2)))  # Enlarges icon
-        button.setStyleSheet("background-color: transparent;")  # Highlights the button
+        button.setStyleSheet("background-color: transparent;")  # options to change background
 
     # Leave animation on hover
     def on_lower_hover_leave(self, button):
         button.setIconSize(QSize(self.lower_button_icon_width, self.lower_button_height))  # Reverts the icon to the original size
-        button.setStyleSheet("background-color: transparent;")  # Reverts the highlight
+        button.setStyleSheet("background-color: transparent;")  # options to change background
 
     def on_upper_hover_enter(self, button):
         button.setIconSize(QSize(int(self.upper_button_icon_width*1.2), int(self.upper_button_icon_height*1.2)))  # Enlarges icon
-        button.setStyleSheet("background-color: transparent;")  # Highlights the button
+        button.setStyleSheet("background-color: transparent;")  # options to change background
 
     # Leave animation on hover
     def on_upper_hover_leave(self, button):
         button.setIconSize(QSize(self.upper_button_icon_width, self.upper_button_icon_height))  # Reverts the icon to the original size
-        button.setStyleSheet("background-color: transparent;")  # Reverts the highlight
+        button.setStyleSheet("background-color: transparent;")  # options to change background
 
     # Method for painting the background
     def paintEvent(self, event):
