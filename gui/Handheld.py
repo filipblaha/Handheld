@@ -38,6 +38,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
                                                             #sets color of background background-color: #1e1e1e;
                                                             #for custom background picture background-color: => background-image:
                                                             #we can modify the picture here(position, repeating, ...)
+
         # code enabling to be controlled by touch (touch screen support)
         self.setAttribute(Qt.WA_AcceptTouchEvents, True)
 
@@ -55,6 +56,10 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         scroll_area.setWidgetResizable(True)
         scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)  # Ensures horizontal scrolling
         scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)   # Disable vertical scrolling
+
+
+        # changes swipe action to scroll in scroll_area
+        self.scroll_area.grabGesture(Qt.PanGesture)
 
         # Set transparent background for scroll area
         scroll_area.setStyleSheet("background-color: transparent; border: none;")
@@ -216,9 +221,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
                 mouse_event_release = QMouseEvent(QEvent.Type.MouseButtonRelease, touch_point.pos(), Qt.LeftButton,
                                                   Qt.LeftButton, Qt.NoModifier)
                 QApplication.sendEvent(self, mouse_event_release)
-            # performs this code if we slide over a screen with a finger
-            elif touch_point.state() == Qt.TouchPointMoved:
-                print(f"Touch moved to {touch_point.pos()}")
+            # scrolling through is coded somewhere else cause its easier
         event.accept()  # Mark the event as handled
 
     # Entry animation on hover
