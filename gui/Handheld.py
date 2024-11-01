@@ -129,7 +129,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
             btn.setIcon(QIcon(icon)) #sets visuals of the button to picture from icon list
             btn.setIconSize(QSize(self.lower_button_icon_width, self.lower_button_icon_height)) #scales the picture
             btn.setFixedSize(self.lower_button_width, self.lower_button_height) #width and height of the button
-            btn.setStyleSheet("border: none; background-color: red;")
+            btn.setStyleSheet("border: none; background-color: transparent;")
 
             btn.clicked.connect(lambda _, idx=i: self.on_game_item_clicked(idx)) #activating the on menu item clicked function
 
@@ -155,7 +155,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         self.upper_button_right_limit = int((self.window_width - (self.upper_button_width * self.upper_layout_icon_count +
                                                              self.upper_button_spacing * (self.upper_layout_icon_count-1)))/2)
         self.upper_button_bottom_limit = int((2/6)*self.window_height)
-        print(self.upper_button_left_limit,   self.upper_button_top_limit, self.upper_button_right_limit,self.upper_button_bottom_limit)
+
         # upper buttons setup
         upper_layout.addStretch(1)
         upper_layout.setContentsMargins(self.upper_button_left_limit,   self.upper_button_top_limit,
@@ -167,7 +167,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
             btn.setIcon(QIcon(icon))  # sets visuals of the button to picture from icon list
             btn.setIconSize(QSize(self.upper_button_icon_width, self.upper_button_icon_height))  # scales the picture
             btn.setFixedSize(self.upper_button_width, self.upper_button_height)  # width and height of the button
-            btn.setStyleSheet("border: none; background-color: blue;")
+            btn.setStyleSheet("border: none; background-color: transparent;")
 
             btn.clicked.connect(lambda _, idx=i: self.on_menu_item_clicked(idx))  # activating the on menu item clicked function
 
@@ -185,12 +185,12 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         game_path = self.games[idx]  # initialise index of the game
         try:
             self.enum = 1
-            print(self.enum)
+
             os.chdir(os.path.dirname(game_path))
             subprocess.run(["python", os.path.basename(game_path)])
             os.chdir(self.gui_path)
             self.enum = 0
-            print(self.enum)
+
         except Exception as e: # in case of error
             print(f"Chyba při spuštění hry: {e}")
 
