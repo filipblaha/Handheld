@@ -51,7 +51,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         # Scroll area for the slider
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
-        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOn)  # Ensures horizontal scrolling
+        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)  # Ensures horizontal scrolling
         scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)   # Disable vertical scrolling
 
         # Set transparent background for scroll area
@@ -83,7 +83,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         self.upper_layout_icon = ['icons/code.png',
                             'icons/reconstruction.png',
                             'icons/reconstruction.png']  # Paths for small buttons
-        self.upper__layout_icon_count = len(self.upper_layout_icon)
+        self.upper_layout_icon_count = len(self.upper_layout_icon)
 
         # List of games
         self.games = ['../games/SpaceShooter/game_files/main.py', '../games/Tester/Handheld_tester.py', '',''] # source of the game .exe (indexes decides which one to start so order matters)
@@ -109,10 +109,11 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         self.lower_button_top_limit = int((2/6)*self.window_height)
         self.lower_button_left_limit = int((self.window_width - (self.lower_button_width * self.lower_layout_icon_count +
                                                              self.lower_button_spacing * (self.lower_layout_icon_count-1)))/2)
+                                                                    # -12 because for some reason the math isnt mathing
         self.lower_button_right_limit = int((self.window_width - (self.lower_button_width * self.lower_layout_icon_count +
                                                              self.lower_button_spacing * (self.lower_layout_icon_count-1)))/2)
         self.lower_button_bottom_limit = int((2/6)*self.window_height)
-        print(self.lower_button_bottom_limit)
+
         # lower layout setup
         lower_layout.setContentsMargins(self.lower_button_left_limit, 0, self.lower_button_right_limit, self.lower_button_bottom_limit)
                                                 #sets spaces between widgets(left, top, right, bottom)
@@ -135,8 +136,8 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
             self.buttons.append(btn) #adds button to self.buttons list
 
             # animations of buttons
-            btn.enterEvent = lambda event, b=btn: self.on_hover_enter(b)
-            btn.leaveEvent = lambda event, b=btn: self.on_hover_leave(b)
+            btn.enterEvent = lambda event, b=btn: self.on_lower_hover_enter(b)
+            btn.leaveEvent = lambda event, b=btn: self.on_lower_hover_leave(b)
 
             # adding button to lower layout widget list
             lower_layout.addWidget(btn)
@@ -147,14 +148,18 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         self.upper_button_height = int(self.window_height / 9.6)
         self.upper_button_icon_width = int(self.window_width / 26.666666)
         self.upper_button_icon_height = int(self.window_height / 15)
-        self.upper_button_top_limit = 0
-        self.upper_button_left_limit = 0
-        self.upper_button_right_limit = 0
-        self.upper_button_bottom_limit = 0
-
+        self.upper_button_left_limit = int((self.window_width - (self.upper_button_width * self.upper_layout_icon_count +
+                                                             self.upper_button_spacing * (self.upper_layout_icon_count-1)))/2)
+        self.upper_button_top_limit = int((1/5)*self.window_height)
+                                                                    # -12 because for some reason the math isnt mathing
+        self.upper_button_right_limit = int((self.window_width - (self.upper_button_width * self.upper_layout_icon_count +
+                                                             self.upper_button_spacing * (self.upper_layout_icon_count-1)))/2)
+        self.upper_button_bottom_limit = int((2/6)*self.window_height)
+        print(self.upper_button_left_limit,   self.upper_button_top_limit, self.upper_button_right_limit,self.upper_button_bottom_limit)
         # upper buttons setup
         upper_layout.addStretch(1)
-        upper_layout.setContentsMargins(0, 100, 280, 0) #sets spaces between widgets(left, top, right, bottom)
+        upper_layout.setContentsMargins(self.upper_button_left_limit,   self.upper_button_top_limit,
+                                        self.upper_button_right_limit,0) #sets spaces between widgets(left, top, right, bottom)
         upper_layout.setSpacing(self.upper_button_spacing)
 
         for i, icon in enumerate(self.upper_layout_icon):
@@ -169,8 +174,8 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
             self.buttons.append(btn)  # adds button to self.buttons list
 
             # animations of buttons
-            btn.enterEvent = lambda event, b=btn: self.on_small_hover_enter(b)
-            btn.leaveEvent = lambda event, b=btn: self.on_small_hover_leave(b)
+            btn.enterEvent = lambda event, b=btn: self.on_upper_hover_enter(b)
+            btn.leaveEvent = lambda event, b=btn: self.on_upper_hover_leave(b)
 
             # adding button to upper layout widget list
             upper_layout.addWidget(btn)
@@ -201,25 +206,22 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
             print(f"Chyba při spuštění menu: {e}")
 
     # Entry animation on hover
-
-    def on_hover_enter(self, button):
-        button.setIconSize(QSize(80, 80))  # Enlarges icon
+    def on_lower_hover_enter(self, button):
+        button.setIconSize(QSize(int(self.lower_button_icon_width*1.2), int(self.lower_button_height*1.2)))  # Enlarges icon
         button.setStyleSheet("background-color: transparent;")  # Highlights the button
 
     # Leave animation on hover
-
-    def on_hover_leave(self, button):
-        button.setIconSize(QSize(64, 64))  # Reverts the icon to the original size
+    def on_lower_hover_leave(self, button):
+        button.setIconSize(QSize(self.lower_button_icon_width, self.lower_button_height))  # Reverts the icon to the original size
         button.setStyleSheet("background-color: transparent;")  # Reverts the highlight
 
-    def on_small_hover_enter(self, button):
-        button.setIconSize(QSize(50, 50))  # Enlarges icon
+    def on_upper_hover_enter(self, button):
+        button.setIconSize(QSize(int(self.upper_button_icon_width*1.2), int(self.upper_button_icon_height*1.2)))  # Enlarges icon
         button.setStyleSheet("background-color: transparent;")  # Highlights the button
 
-        # Leave animation on hover
-
-    def on_small_hover_leave(self, button):
-        button.setIconSize(QSize(30, 30))  # Reverts the icon to the original size
+    # Leave animation on hover
+    def on_upper_hover_leave(self, button):
+        button.setIconSize(QSize(self.upper_button_icon_width, self.upper_button_icon_height))  # Reverts the icon to the original size
         button.setStyleSheet("background-color: transparent;")  # Reverts the highlight
 
     # Method for painting the background
