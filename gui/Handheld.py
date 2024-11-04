@@ -59,7 +59,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
 
 
         # changes swipe action to scroll in scroll_area
-        self.scroll_area.grabGesture(Qt.PanGesture)
+        scroll_area.grabGesture(Qt.PanGesture)
 
         # Set transparent background for scroll area
         scroll_area.setStyleSheet("background-color: transparent; border: none;")
