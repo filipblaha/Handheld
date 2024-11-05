@@ -96,7 +96,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         self.games = ['../games/SpaceShooter/game_files/main.py', '../games/Tester/Handheld_tester.py', '',''] # source of the game .exe (indexes decides which one to start so order matters)
 
         # List of menu buttons
-        self.menu = ['../gui/Handheld.py','',''] # starts the code of the menu
+        self.menu = ['../gui/Handheld.py',self.settings,''] # starts the code of the menu
 
         # Path to the gui(from this file we navigate to the game/gui files)
         self.gui_path = getcwd()
@@ -200,11 +200,14 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
     def on_menu_item_clicked(self, idx):
         menu_action = self.menu[idx]  # initialise index of the game
         try:
-            self.enum = 2
-            os.chdir(os.path.dirname(menu_action))                      #os.path.dirname = everything except the last part of the path to the file
-            subprocess.run(["python", os.path.basename(menu_action)])   #os.path.basename = last part of file path
-            os.chdir(self.gui_path)
-            self.enum = 0
+            if callable(menu_action):
+                menu_action()
+            else:
+                self.enum = 2
+                os.chdir(os.path.dirname(menu_action))                      #os.path.dirname = everything except the last part of the path to the file
+                subprocess.run(["python", os.path.basename(menu_action)])   #os.path.basename = last part of file path
+                os.chdir(self.gui_path)
+                self.enum = 0
         except Exception as e: # in case of error
             print(f"Chyba při spuštění menu: {e}")
 
@@ -250,6 +253,11 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         scaled_pixmap = self.pixmap.scaled(self.size(), aspectRatioMode=1)
         painter.drawPixmap(0, 0, scaled_pixmap)
 
+    # settings function
+    def settings(self):
+        for button in self.buttons:
+            button.hide()
+        print('Settings')
 # Main application
 if __name__ == '__main__':
     app = QApplication(sys.argv)
