@@ -258,6 +258,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         for button in self.buttons:
             button.hide()
         print('Settings')
+
 # Main application
 if __name__ == '__main__':
     app = QApplication(sys.argv)
