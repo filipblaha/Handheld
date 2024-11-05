@@ -1,0 +1,1 @@
+Proč nepoužíváme Raspberry?
