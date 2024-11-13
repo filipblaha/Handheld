@@ -1,8 +1,8 @@
 import sys
 from os import getcwd
 
-from PyQt5.QtWidgets import QApplication, QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QMainWindow, QScrollArea
-from PyQt5.QtGui import QIcon, QPixmap, QPainter, QTouchEvent, QMouseEvent
+from PyQt5.QtWidgets import QApplication, QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QMainWindow, QScrollArea, QDialog, QSlider, QLabel
+from PyQt5.QtGui import QIcon, QPixmap, QPainter, QTouchEvent, QMouseEvent, QFont
 from PyQt5.QtCore import QSize, Qt, QEvent
 import subprocess
 import os
@@ -149,7 +149,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
             lower_layout.addWidget(btn)
 
         # upper buttons mathing (scaling)
-        self.upper_button_spacing = int(self.window_width/26.666666)
+        self.upper_button_spacing = int(self.window_width / 26.666666) # could have used double slash // to round the number to integer
         self.upper_button_width = int(self.window_width / 16)
         self.upper_button_height = int(self.window_height / 9.6)
         self.upper_button_icon_width = int(self.window_width / 26.666666)
@@ -254,10 +254,84 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         painter.drawPixmap(0, 0, scaled_pixmap)
 
     # settings function
+    from PyQt5.QtGui import QFont
+
+    # settings function
     def settings(self):
+        # Hide main menu buttons
         for button in self.buttons:
             button.hide()
-        print('Settings')
+
+        self.settings_widgets = []
+
+        # Set font for labels
+        font = QFont("Arial", 12, QFont.Bold)  # Example font setup, customize as needed
+
+        # Create labels for the sliders
+        self.button_volume_label = QLabel("Button Volume", self)
+        self.button_volume_label.setFont(font)
+        self.background_volume_label = QLabel("Background Volume", self)
+        self.background_volume_label.setFont(font)
+
+        # Create sliders for button and background sound volumes
+        self.button_volume_slider = QSlider(Qt.Horizontal, self)
+        self.button_volume_slider.setRange(0, 100)
+        self.button_volume_slider.setValue(50)
+        self.button_volume_slider.valueChanged.connect(self.update_button_volume)
+
+        self.background_volume_slider = QSlider(Qt.Horizontal, self)
+        self.background_volume_slider.setRange(0, 100)
+        self.background_volume_slider.setValue(50)
+        self.background_volume_slider.valueChanged.connect(self.update_background_volume)
+
+        # Calculate centered positions based on window size
+        center_x = self.window_width // 2
+        center_y = self.window_height // 2
+
+        # Position the labels and sliders centrally
+        self.button_volume_label.move(center_x - 75, center_y - 80)
+        self.button_volume_slider.move(center_x - 75, center_y - 50)
+        self.background_volume_label.move(center_x - 75, center_y + 10)
+        self.background_volume_slider.move(center_x - 75, center_y + 40)
+
+        # Create "Back to Menu" button
+        self.back_button = QPushButton("Back to Menu", self)
+        self.back_button.setStyleSheet("background-color: #333; color: white; border: none;")
+        self.back_button.setFixedSize(120, 40)
+        self.back_button.move(self.window_width - self.back_button.width() - 10, 10)  # Position in top-right corner
+        self.back_button.clicked.connect(self.show_main_menu)
+        self.back_button.show()
+
+        #adding everything to the list of the settings_widgets
+        self.settings_widgets.append(self.button_volume_label)
+        self.settings_widgets.append(self.button_volume_slider)
+        self.settings_widgets.append(self.background_volume_label)
+        self.settings_widgets.append(self.background_volume_slider)
+        self.settings_widgets.append(self.back_button)
+
+        #shows all of the self.settings_widgets
+        for setting_widget in self.settings_widgets:
+            setting_widget.show()
+
+    # Function to show the main menu and hide settings
+    def show_main_menu(self):
+        # hides all settings widgets
+        for widget in self.settings_widgets:
+            widget.hide()
+
+        # Show all main menu buttons
+        for button in self.buttons:
+            button.show()
+
+    # Volume update methods for sliders
+    def update_button_volume(self, value):
+        print(f"Button volume set to: {value}")
+        # Here you would set the button sound volume using your audio library
+
+    def update_background_volume(self, value):
+        print(f"Background volume set to: {value}")
+        # Here you would set the background sound volume using your audio library
+
 
 # Main application
 if __name__ == '__main__':
