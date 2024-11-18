@@ -2,7 +2,7 @@ import sys
 from os import getcwd
 
 from PyQt5.QtWidgets import QApplication, QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QMainWindow, QScrollArea, QDialog, QSlider, QLabel
-from PyQt5.QtGui import QIcon, QPixmap, QPainter, QTouchEvent, QMouseEvent, QFont
+from PyQt5.QtGui import QIcon, QPixmap, QPainter, QTouchEvent, QMouseEvent, QFont, QFontDatabase, QFont
 from PyQt5.QtCore import QSize, Qt, QEvent
 import subprocess
 import os
@@ -38,6 +38,8 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
                                                             #sets color of background background-color: #1e1e1e;
                                                             #for custom background picture background-color: => background-image:
                                                             #we can modify the picture here(position, repeating, ...)
+
+
 
         # code enabling to be controlled by touch (touch screen support)
         self.setAttribute(Qt.WA_AcceptTouchEvents, True)
@@ -84,7 +86,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
                       'icons/cube.png',
                       'icons/reconstruction.png',
                       'icons/reconstruction.png']  #paths to pictures used as buttons later in the code
-        self.lower_layout_icon_count = len(self.lower_layout_icon) # nuumber of icons in the list of lower layout
+        self.lower_layout_icon_count = len(self.lower_layout_icon) # number of icons in the list of lower layout
 
         # List of small buttons (icons)
         self.upper_layout_icon = ['icons/code.png',
@@ -100,6 +102,16 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
 
         # Path to the gui(from this file we navigate to the game/gui files)
         self.gui_path = getcwd()
+
+        # font setup
+        font_path = '/Users/tomasfikart/PycharmProjects/Handheld/gui/fonts/upheaval/upheavtt.ttf'
+        font_id = QFontDatabase.addApplicationFont(font_path)
+
+        if font_id == -1:
+            print("Nepodařilo se načíst font.")
+        else:
+            font_family = QFontDatabase.applicationFontFamilies(font_id)[0]
+            self.custom_font = QFont(font_family)
 
         # enum = number which represents state of the code (menu = 0, game = 1, menu_settings = 2)
         self.enum = 0
@@ -254,9 +266,6 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         painter.drawPixmap(0, 0, scaled_pixmap)
 
     # settings function
-    from PyQt5.QtGui import QFont
-
-    # settings function
     def settings(self):
         # Hide main menu buttons
         for button in self.buttons:
@@ -265,13 +274,13 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         self.settings_widgets = []
 
         # Set font for labels
-        font = QFont("Arial", 12, QFont.Bold)  # Example font setup, customize as needed
+        # font = QFont(self.custom_font, 12, QFont.Bold)
 
         # Create labels for the sliders
         self.button_volume_label = QLabel("Button Volume", self)
-        self.button_volume_label.setFont(font)
+        self.button_volume_label.setFont(self.custom_font)
         self.background_volume_label = QLabel("Background Volume", self)
-        self.background_volume_label.setFont(font)
+        self.background_volume_label.setFont(self.custom_font)
 
         # Create sliders for button and background sound volumes
         self.button_volume_slider = QSlider(Qt.Horizontal, self)
@@ -297,6 +306,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         # Create "Back to Menu" button
         self.back_button = QPushButton("Back to Menu", self)
         self.back_button.setStyleSheet("background-color: #333; color: white; border: none;")
+        self.back_button.setFont(self.custom_font)
         self.back_button.setFixedSize(120, 40)
         self.back_button.move(self.window_width - self.back_button.width() - 10, 10)  # Position in top-right corner
         self.back_button.clicked.connect(self.show_main_menu)
@@ -309,9 +319,36 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         self.settings_widgets.append(self.background_volume_slider)
         self.settings_widgets.append(self.back_button)
 
-        #shows all of the self.settings_widgets
+        #shows all the self.settings_widgets
         for setting_widget in self.settings_widgets:
             setting_widget.show()
+
+        self.button_volume_slider.setStyleSheet("""
+            QSlider::groove:horizontal {
+                border: 1px solid #999;
+                height: 8px;
+                background: #e0e0e0;
+                border-radius: 4px;
+            }
+            QSlider::handle:horizontal {
+                background: #4CAF50;
+                border: 1px solid #5c5c5c;
+                width: 18px;
+                height: 18px;
+                margin: -5px 0;  /* Center handle */
+                border-radius: 9px;
+            }
+            QSlider::sub-page:horizontal {
+                background: #4CAF50;
+                border-radius: 4px;
+            }
+            QSlider::add-page:horizontal {
+                background: #e0e0e0;
+                border-radius: 4px;
+            }
+        """)
+
+        self.background_volume_slider.setStyleSheet(self.button_volume_slider.styleSheet())
 
     # Function to show the main menu and hide settings
     def show_main_menu(self):
@@ -331,7 +368,6 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
     def update_background_volume(self, value):
         print(f"Background volume set to: {value}")
         # Here you would set the background sound volume using your audio library
-
 
 # Main application
 if __name__ == '__main__':
