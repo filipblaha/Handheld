@@ -278,25 +278,28 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         self.settings_widgets = []
 
         # Set font for labels
-        self.font = QFont('Upheaval TT (BRK)', 12, QFont.Bold)
+        self.font = QFont('Upheaval TT (BRK)', 18, QFont.Bold)
 
         # Create labels for the sliders
         self.button_volume_label = QLabel("Button Volume", self)
         self.button_volume_label.setFont(self.font)
+        self.button_volume_label.adjustSize()
         self.background_volume_label = QLabel("Background Volume", self)
         self.background_volume_label.setFont(self.font)
+        self.background_volume_label.adjustSize()
 
         # Create sliders for button and background sound volumes
         self.button_volume_slider = QSlider(Qt.Horizontal, self)
         self.button_volume_slider.setRange(0, 100)
         self.button_volume_slider.setValue(50)
         self.button_volume_slider.valueChanged.connect(self.update_button_volume)
+        self.button_volume_slider.setFixedWidth(200)
 
         self.background_volume_slider = QSlider(Qt.Horizontal, self)
         self.background_volume_slider.setRange(0, 100)
         self.background_volume_slider.setValue(50)
         self.background_volume_slider.valueChanged.connect(self.update_background_volume)
-
+        self.background_volume_slider.setFixedWidth(200)
         # Calculate centered positions based on window size
         center_x = self.window_width // 2
         center_y = self.window_height // 2
@@ -311,7 +314,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         self.back_button = QPushButton("Back to Menu", self)
         self.back_button.setStyleSheet("background-color: #333; color: white; border: none;")
         self.back_button.setFont(self.font)
-        self.back_button.setFixedSize(120, 40)
+        self.back_button.setFixedSize(160, 40)
         self.back_button.move(self.window_width - self.back_button.width() - 10, 10)  # Position in top-right corner
         self.back_button.clicked.connect(self.show_main_menu)
         self.back_button.show()
