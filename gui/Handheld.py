@@ -3,7 +3,8 @@ from os import getcwd
 
 from PyQt5.QtWidgets import QApplication, QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QMainWindow, QScrollArea, QDialog, QSlider, QLabel
 from PyQt5.QtGui import QIcon, QPixmap, QPainter, QTouchEvent, QMouseEvent, QFont, QFontDatabase, QFont
-from PyQt5.QtCore import QSize, Qt, QEvent
+from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
+from PyQt5.QtCore import QSize, Qt, QEvent, QUrl
 import subprocess
 import os
 
@@ -38,7 +39,16 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
                                                             #sets color of background background-color: #1e1e1e;
                                                             #for custom background picture background-color: => background-image:
                                                             #we can modify the picture here(position, repeating, ...)
+        # Background music setup (is supposed to play all the time in the background in a menu)
+        self.background_music = QMediaPlayer()
+        self.background_music.setMedia(QMediaContent(QUrl.fromLocalFile("cesta/k/souboru.mp3")))
+        self.background_music.setVolume(50)  # Base audio volume is 50
+        self.background_music.play()  # Automatically starts the audio
 
+        # Button audio (is supposed to play when someone hovers a button)
+        self.button_sound = QMediaPlayer()
+        self.button_sound.setMedia(QMediaContent(QUrl.fromLocalFile("cesta/k/souboru.mp3")))
+        self.button_sound.setVolume(50)  # Base audio volume is 50
 
 
         # code enabling to be controlled by touch (touch screen support)
@@ -370,16 +380,25 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
     # Volume update methods for sliders
     def update_button_volume(self, value):
         print(f"Button volume set to: {value}")
-        # Here you would set the button sound volume using your audio library
+        self.background_music.setVolume(value)
 
     def update_background_volume(self, value):
         print(f"Background volume set to: {value}")
         # Here you would set the background sound volume using your audio library
 
+    # Alters music function
+    def pause_background_music(self):
+        self.background_music.pause()
+
+    def stop_background_music(self):
+        self.background_music.stop()
+
+    def start_backgroudn_musix(self):
+        self.background_music.play()
+
 # Main application
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    #app.setFont(custom_font)
     window = HandheldMenu()
     window.show()
     sys.exit(app.exec_())
