@@ -102,17 +102,21 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
 
         # Path to the gui(from this file we navigate to the game/gui files)
         self.gui_path = getcwd()
+        print(self.gui_path)
 
         # font setup
-        font_path = '/Users/tomasfikart/PycharmProjects/Handheld/gui/fonts/upheaval/upheavtt.ttf'
+        os.chdir(self.gui_path)
+        font_path = os.path.join(self.gui_path,'fonts/upheaval/upheavtt.ttf')
         font_id = QFontDatabase.addApplicationFont(font_path)
-
         if font_id == -1:
-            print("Nepodařilo se načíst font.")
+            print("Font se nepodařilo načíst!")
         else:
-            font_family = QFontDatabase.applicationFontFamilies(font_id)[0]
-            self.custom_font = QFont(font_family)
-
+            families = QFontDatabase.applicationFontFamilies(font_id)
+            if families:
+                print("Font se načetl správně:", families)
+            else:
+                print("Font neobsahuje žádné rodiny!")
+        os.chdir(self.gui_path)
         # enum = number which represents state of the code (menu = 0, game = 1, menu_settings = 2)
         self.enum = 0
 
@@ -274,13 +278,13 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         self.settings_widgets = []
 
         # Set font for labels
-        # font = QFont(self.custom_font, 12, QFont.Bold)
+        self.font = QFont('Upheaval TT (BRK)', 12, QFont.Bold)
 
         # Create labels for the sliders
         self.button_volume_label = QLabel("Button Volume", self)
-        self.button_volume_label.setFont(self.custom_font)
+        self.button_volume_label.setFont(self.font)
         self.background_volume_label = QLabel("Background Volume", self)
-        self.background_volume_label.setFont(self.custom_font)
+        self.background_volume_label.setFont(self.font)
 
         # Create sliders for button and background sound volumes
         self.button_volume_slider = QSlider(Qt.Horizontal, self)
@@ -306,7 +310,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         # Create "Back to Menu" button
         self.back_button = QPushButton("Back to Menu", self)
         self.back_button.setStyleSheet("background-color: #333; color: white; border: none;")
-        self.back_button.setFont(self.custom_font)
+        self.back_button.setFont(self.font)
         self.back_button.setFixedSize(120, 40)
         self.back_button.move(self.window_width - self.back_button.width() - 10, 10)  # Position in top-right corner
         self.back_button.clicked.connect(self.show_main_menu)
@@ -372,6 +376,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
 # Main application
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+    #app.setFont(custom_font)
     window = HandheldMenu()
     window.show()
     sys.exit(app.exec_())

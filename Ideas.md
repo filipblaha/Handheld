@@ -1,6 +1,6 @@
 
 Proč nepoužíváme Raspberry?
-Protože ho nemam.
+Budem
 
 ZVUK
 Stereo sluchátka zesilovač: TPA6130A2RTJR
