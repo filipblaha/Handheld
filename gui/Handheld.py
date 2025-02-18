@@ -24,8 +24,8 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         super().__init__()
 
         # Window settings
-        self.window_width = 1640
-        self.window_height = 200
+        self.window_width = 900
+        self.window_height = 720
         self.setFixedSize(self.window_width, self.window_height)             #Size of the window
         self.setWindowTitle('Handheld menu')    #Title of the window
         #self.setWindowFlags(Qt.FramelessWindowHint) # Hides all outlines and top bar of window
@@ -34,21 +34,22 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
                                                 #Second number = position of window in ur screen(pixels from top)
                                                 #Third number = position of window in ur screen(pixels from right)
                                                 #Forth number = position of window in ur screen(pixels from bottom)
+        # Path to the gui(from this file we navigate to the game/gui files)
+        self.gui_path = getcwd()
 
-        self.pixmap = QPixmap('../gui/icons/Background.png')
-                                                            #sets color of background background-color: #1e1e1e;
-                                                            #for custom background picture background-color: => background-image:
-                                                            #we can modify the picture here(position, repeating, ...)
+        self.pixmap = QPixmap('../gui/icons/Background.png') # sets background pic
 
         # Background music setup (is supposed to play all the time in the background in a menu)
         self.background_music = QMediaPlayer()
-        self.background_music.setMedia(QMediaContent(QUrl.fromLocalFile("/Users/tomasfikart/PycharmProjects/Handheld/gui/audio/game-music-player-console-8bit-background-intro-theme-297305.mp3")))
+        self.background_music_path = os.path.join(self.gui_path, 'audio/background_retro_game_music.mp3')
+        self.background_music.setMedia(QMediaContent(QUrl.fromLocalFile(self.background_music_path)))
         self.background_music.setVolume(50)  # Base audio volume is 50
         self.background_music.play()  # Automatically starts the audio
 
         # Button audio (is supposed to play when someone hovers a button)
         self.button_sound = QMediaPlayer()
-        self.button_sound.setMedia(QMediaContent(QUrl.fromLocalFile("/Users/tomasfikart/PycharmProjects/Handheld/gui/audio/button-202966.mp3")))
+        self.button_sound_path = os.path.join(self.gui_path, 'audio/button_short.mp3')
+        self.button_sound.setMedia(QMediaContent(QUrl.fromLocalFile(self.button_sound_path)))
         self.button_sound.setVolume(50)  # Base audio volume is 50
 
 
@@ -110,10 +111,6 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
 
         # List of menu buttons
         self.menu = ['../gui/Handheld.py',self.settings,''] # starts the code of the menu
-
-        # Path to the gui(from this file we navigate to the game/gui files)
-        self.gui_path = getcwd()
-        print(self.gui_path)
 
         # font setup
         os.chdir(self.gui_path)
