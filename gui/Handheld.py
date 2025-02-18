@@ -24,30 +24,31 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         super().__init__()
 
         # Window settings
-        self.window_width = 800
-        self.window_height = 450
+        self.window_width = 1640
+        self.window_height = 200
         self.setFixedSize(self.window_width, self.window_height)             #Size of the window
         self.setWindowTitle('Handheld menu')    #Title of the window
-
         #self.setWindowFlags(Qt.FramelessWindowHint) # Hides all outlines and top bar of window
-        self.setGeometry(350, 200, 200, 200)    #First number = position of window in ur screen(pixels from left)
+
+        self.setGeometry(0, 0, 0, 0)            #First number = position of window in ur screen(pixels from left)
                                                 #Second number = position of window in ur screen(pixels from top)
                                                 #Third number = position of window in ur screen(pixels from right)
                                                 #Forth number = position of window in ur screen(pixels from bottom)
 
-        self.pixmap = QPixmap('../games/SpaceShooter/game_files/assets/animations/background/Background1.png')
+        self.pixmap = QPixmap('../gui/icons/Background.png')
                                                             #sets color of background background-color: #1e1e1e;
                                                             #for custom background picture background-color: => background-image:
                                                             #we can modify the picture here(position, repeating, ...)
+
         # Background music setup (is supposed to play all the time in the background in a menu)
         self.background_music = QMediaPlayer()
-        self.background_music.setMedia(QMediaContent(QUrl.fromLocalFile("cesta/k/souboru.mp3")))
+        self.background_music.setMedia(QMediaContent(QUrl.fromLocalFile("/Users/tomasfikart/PycharmProjects/Handheld/gui/audio/game-music-player-console-8bit-background-intro-theme-297305.mp3")))
         self.background_music.setVolume(50)  # Base audio volume is 50
         self.background_music.play()  # Automatically starts the audio
 
         # Button audio (is supposed to play when someone hovers a button)
         self.button_sound = QMediaPlayer()
-        self.button_sound.setMedia(QMediaContent(QUrl.fromLocalFile("cesta/k/souboru.mp3")))
+        self.button_sound.setMedia(QMediaContent(QUrl.fromLocalFile("/Users/tomasfikart/PycharmProjects/Handheld/gui/audio/button-202966.mp3")))
         self.button_sound.setVolume(50)  # Base audio volume is 50
 
 
@@ -100,7 +101,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
 
         # List of small buttons (icons)
         self.upper_layout_icon = ['icons/code.png',
-                            'icons/reconstruction.png',
+                            '/Users/tomasfikart/PycharmProjects/Handheld/gui/icons/settings_button1.png',
                             'icons/reconstruction.png']  # Paths for small buttons
         self.upper_layout_icon_count = len(self.upper_layout_icon)
 
@@ -216,10 +217,12 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         game_path = self.games[idx]  # initialise index of the game
         try:
             self.enum = 1
+            self.background_music_controller()
             os.chdir(os.path.dirname(game_path))
             subprocess.run(["python", os.path.basename(game_path)])
             os.chdir(self.gui_path)
             self.enum = 0
+            self.background_music_controller()
         except Exception as e: # in case of error
             print(f"Chyba při spuštění hry: {e}")
 
@@ -230,10 +233,12 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
                 menu_action()
             else:
                 self.enum = 2
+                self.background_music_controller()
                 os.chdir(os.path.dirname(menu_action))                      #os.path.dirname = everything except the last part of the path to the file
                 subprocess.run(["python", os.path.basename(menu_action)])   #os.path.basename = last part of file path
                 os.chdir(self.gui_path)
                 self.enum = 0
+                self.background_music_controller()
         except Exception as e: # in case of error
             print(f"Chyba při spuštění menu: {e}")
 
@@ -257,6 +262,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
     def on_lower_hover_enter(self, button):
         button.setIconSize(QSize(int(self.lower_button_icon_width*1.2), int(self.lower_button_height*1.2)))  # Enlarges icon
         button.setStyleSheet("background-color: transparent;")  # options to change background
+        self.button_sound.play()
 
     # Leave animation on hover
     def on_lower_hover_leave(self, button):
@@ -266,6 +272,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
     def on_upper_hover_enter(self, button):
         button.setIconSize(QSize(int(self.upper_button_icon_width*1.2), int(self.upper_button_icon_height*1.2)))  # Enlarges icon
         button.setStyleSheet("background-color: transparent;")  # options to change background
+        self.button_sound.play()
 
     # Leave animation on hover
     def on_upper_hover_leave(self, button):
@@ -276,7 +283,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
     def paintEvent(self, event):
         painter = QPainter(self)
         # Draw the background image
-        scaled_pixmap = self.pixmap.scaled(self.size(), aspectRatioMode=1)
+        scaled_pixmap = self.pixmap.scaled(self.width(), self.height(), Qt.IgnoreAspectRatio, Qt.SmoothTransformation)
         painter.drawPixmap(0, 0, scaled_pixmap)
 
     # settings function
@@ -380,21 +387,18 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
     # Volume update methods for sliders
     def update_button_volume(self, value):
         print(f"Button volume set to: {value}")
-        self.background_music.setVolume(value)
+        self.button_sound.setVolume(value)
 
     def update_background_volume(self, value):
-        print(f"Background volume set to: {value}")
-        # Here you would set the background sound volume using your audio library
+        self.background_music.setVolume(value)
 
-    # Alters music function
-    def pause_background_music(self):
-        self.background_music.pause()
-
-    def stop_background_music(self):
-        self.background_music.stop()
-
-    def start_backgroudn_musix(self):
-        self.background_music.play()
+    def background_music_controller(self):
+        if self.enum == 0:
+            self.background_music.play()
+        if self.enum == 1:
+            self.background_music.stop()
+        if self.enum == 2:
+            self.background_music.play()
 
 # Main application
 if __name__ == '__main__':
