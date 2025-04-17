@@ -221,37 +221,53 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         self.controller_timer.timeout.connect(self.check_controller_input)
         self.controller_timer.start(50)  # Check every 50ms
 
+        # Initialize pygame for controller support
+        self.pygame_initialized = False
+        self.init_pygame()
+
+    def init_pygame(self):
+        """Initialize pygame only for controller support"""
+        try:
+            pygame.init()
+            pygame.joystick.init()
+            self.pygame_initialized = True
+            print("Pygame initialized for controller support")
+        except Exception as e:
+            print(f"Error initializing pygame: {e}")
+            self.pygame_initialized = False
+
     def setup_controller(self):
         """Initialize the controller if connected"""
+        if not self.pygame_initialized:
+            self.init_pygame()
+            if not self.pygame_initialized:
+                return None
+
         try:
-            pygame.joystick.quit()
+            pygame.joystick.quit()  # Clean up first
             pygame.joystick.init()
 
             joystick_count = pygame.joystick.get_count()
             if joystick_count > 0:
-                self.controller = pygame.joystick.Joystick(0)
-                self.controller.init()
-                print(f"Controller detected: {self.controller.get_name()}")
-                print(f"Axes: {self.controller.get_numaxes()}")
-                print(f"Buttons: {self.controller.get_numbuttons()}")
-                print(f"Hats: {self.controller.get_numhats()}")
-            else:
-                print("No controller detected")
-                self.controller = None
+                controller = pygame.joystick.Joystick(0)
+                controller.init()
+                print(f"Controller detected: {controller.get_name()}")
+                return controller
         except Exception as e:
             print(f"Controller init error: {e}")
-            self.controller = None
+        return None
 
     def check_controller_input(self):
         """Check for controller input and handle navigation"""
-        if not self.controller:
-            self.setup_controller()
-            return
+        if not hasattr(self, 'controller') or self.controller is None:
+            self.controller = self.setup_controller()
+            if self.controller is None:
+                return
 
         try:
-            # Process pygame events
+            # Process pygame events to keep the queue clear
             for event in pygame.event.get():
-                pass  # Just clear the event queue
+                pass
 
             # Get controller axes
             axis_0 = self.controller.get_axis(0)  # Left stick X
