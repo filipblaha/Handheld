@@ -1,0 +1,513 @@
+[
+  {
+    "language": "english",
+	"text":{
+      "main_menu": {
+        "title": "Main Menu",
+        "content": ["Play", "Statistics", "About Game", "Quit", "Soundtrack by: Karl Casey @ White Bat Audio"]
+      },
+      "settings": {
+        "title": "Settings",
+        "content": ["Music Volume", "Effects Volume", "Low Health Blinking", "Vibrations", "Back"]
+      },
+      "statistics": {
+        "title": "Statistics",
+        "content": ["Name", "Score", "Ship", "Date"]
+      },
+      "about_game": {
+        "title": "About Game",
+        "content": [
+          "The game is a 2D arcade-like shooter. The player controls a spaceship and must defend it against enemy attacks. The goal is to score as many points as possible.",
+          "Was created as a semester project in the KEP/VMZ subject on the Faculty of Electrical Engineering, University of West Bohemia. The subject took place in the winter semester of the 2023/24 academic year.",
+          "Development team:",
+          "Jan Sebele",
+          "Pavel Franek",
+          "Michal Lopata",
+          "Tomas Fikart",
+          "Controls",
+          "Movement",
+          "Aim",
+          "Shooting",
+          "Special skills",
+          "Pause",
+          "Ships: ",		  
+          "HP: ",
+          "DMG: ",
+          "Fire rate:",
+          "Acceleration: ",
+          "Speed: ",
+          "Q skill:",
+          "E skill:",
+		  "Dash",
+		  "Shield",
+		  "Rapid fire",
+		  "Blast shoot",
+		  "Speed boost",
+		  "Gravity pulse",
+		  "Enemies: ",
+          "He acts like a kamikaze pilot. He doesn't have a cannon to shoot, but he deals a lot of damage on contact with a ship.",
+          "His name describes him correctly. He has a lot of HP, he's big, and he shoots fast, but his shots don't do much damage.",
+          "He tries to keep his distance from the ship, making it hard to hit him. His missiles deal a lot of damage, but he has low HP.",
+          "Once in a while a MedKit will appear on the screen, if the MedKit is not picked up within a few seconds the Stealer will appear and try to take the MedKit. If you pick it up in front of him, or if he picks it up, his design will change and he'll act like a Zarovka.",
+		  "Thank you for playing our game <3",
+		  "Back"
+        ]
+      },
+      "ship_select": {
+        "title": "Ship Select",
+        "content": [
+          "HP: ",
+          "DMG: ",
+          "Fire rate:",
+          "Acceleration: ",
+          "Speed: ",
+          "Q skill:",
+          "E skill:",
+		  "Dash",
+		  "Shield",
+		  "Rapid fire",
+		  "Blast shoot",
+		  "Speed boost",
+		  "Gravity pulse"
+        ]
+      },
+      "pause": {
+        "title": "Pause",
+        "content": ["Resume", "Main Menu", "Quit", "Press a key to continue"]
+      },
+      "game_over": {
+        "title": "Game Over",
+        "content": ["Score: ", "Save Name", "Again", "Main Menu", "Quit"]
+      },
+	  "upgrade": {
+		"content": ["Weapons", "Cooling", "Shield", "Regeneration", "Thruster"]
+}
+    }
+  },
+  {
+    "language": "czech",
+	"text":{
+      "main_menu": {
+        "title": "Hlavní menu",
+        "content": ["Hrát", "Statistiky", "O hře", "Ukončit", "Soundtrack: Karl Casey @ White Bat Audio"]
+      },
+      "settings": {
+        "title": "Nastavení",
+        "content": ["Hlasitost hudby", "Hlasitost efektů", "Blikání při nízkém zdraví", "Vibrace", "Zpět"]
+      },
+      "statistics": {
+        "title": "Statistiky",
+        "content": ["Jméno", "Skóre", "Loď", "Datum"]
+      },
+      "about_game": {
+        "title": "O hře",
+        "content": [
+          "Hra je 2D arkádová střílečka. Hráč ovládá vesmírnou loď a musí ji bránit proti útokům nepřátel. Cílem je dosáhnout co nejvyššího skóre.",
+          "Byla vytvořena jako semestrální projekt v předmětu KEP/VMZ na Fakultě elektrotechniky, Západočeské univerzity v Plzni. Předmět probíhal v zimním semestru akademického roku 2023/24.",
+          "Vývojový tým:",
+          "Jan Šebel",
+          "Pavel Franěk",
+          "Michal Lopata",
+          "Tomáš Fikart",
+          "Ovládání:",
+          "Pohyb",
+          "Zaměření",
+          "Střelba",
+          "Dovednosti",
+          "Pauza",
+          "Lodě: ",		  
+          "HP: ",
+          "Poškození:",
+          "Rychlost střelby:",
+          "Zrychlení:",
+          "Rychlost: ",
+          "Q: ",
+          "E: ",
+		  "Úhyb",
+		  "Štít",
+		  "Rychlopálka",
+		  "Výstřel exploze",
+		  "Zrychlení",
+		  "Gravitační puls",
+		  "Nepřátelé:",
+          "Jedná se o kamikaze pilota. Nemá kanón k útoku, ale při kontaktu s lodí způsobí velké množství škod.",
+          "Jeho jméno ho popisuje správně. Má hodně životů, je velký a střílí rychle, ale jeho střely nedělají moc škody.",
+          "Snaží se udržovat odstup od lodi, což ho činí obtížným zasáhnout. Jeho rakety způsobují velké škody, ale má málo životů.",
+          "Občas se na obrazovce objeví MedKit, pokud není MedKit sebrán do několika sekund, objeví se Stealer a pokusí se MedKit získat. Pokud ho seberete před ním, nebo ho sebere on, jeho design se změní a bude se chovat jako Zarovka.",
+		  "Děkujeme, že hrajete naši hru <3",
+		  "Zpět"
+        ]
+      },
+      "ship_select": {
+        "title": "Výběr lodě",
+        "content": [
+          "HP: ",
+          "Poškození:",
+          "Rychlost střelby:",
+          "Zrychlení:",
+          "Rychlost: ",
+          "Q: ",
+          "E: ",
+		  "Úhyb",
+		  "Štít",
+		  "Rychlopálka",
+		  "Výstřel exploze",
+		  "Zrychlení",
+		  "Gravitační puls"
+        ]
+      },
+      "pause": {
+        "title": "Pauza",
+        "content": ["Pokračovat", "Hlavní menu", "Ukončit", "Stiskněte klávesu pro pokračování"]
+      },
+      "game_over": {
+        "title": "Konec hry",
+        "content": ["Skóre:", "Uložit jméno", "Znovu", "Hlavní menu", "Ukončit"]
+      },
+	 "upgrade": {
+		"content": ["Zbraně", "Chlazení", "Štít", "Regenerace", "Pohon"]
+    }
+}
+  },
+  {
+	  "language": "spanish",
+	  "text":{
+      "main_menu": {
+        "title": "Menú Principal",
+        "content": ["Jugar", "Estadísticas", "El Juego", "Salir", "Banda sonora de: Karl Casey @ White Bat Audio"]
+      },
+      "settings": {
+        "title": "Ajustes",
+        "content": ["Volumen de Música", "Volumen de Efectos", "Parpadeo de Baja Salud", "Vibración", "Atrás"]
+      },
+      "statistics": {
+        "title": "Estadísticas",
+        "content": ["Nombre", "Puntuación", "Nave", "Fecha"]
+      },
+      "about_game": {
+        "title": "Sobre el Juego",
+        "content": [
+          "El juego es un shooter arcade en 2D. El jugador controla una nave espacial y debe defenderla contra los ataques enemigos. El objetivo es obtener la mayor cantidad de puntos posible.",
+          "Fue creado como un proyecto semestral en la asignatura KEP/VMZ en la Facultad de Ingeniería Eléctrica de la Universidad de West Bohemia. La asignatura tuvo lugar en el semestre de invierno del año académico 2023/24.",
+          "Equipo de Desarrollo:",
+          "Jan Šebel",
+          "Pavel Franěk",
+          "Michal Lopata",
+          "Tomáš Fikart",
+          "Controles: ",
+          "Movimiento",
+          "Apuntar",
+          "Disparar",
+          "Habilidades",
+          "Pausa",
+          "Naves: ",
+          "Vida: ",
+          "Daño:",
+          "Velocidad de Disparo:",
+          "Aceleración:",
+          "Velocidad: ",
+          "Habilidad Q:",
+          "Habilidad E:",
+		  "Embestida",
+		  "Escudo",
+		  "Disparo rápido",
+		  "Disparo explosivo",
+		  "Impulso de velocidad",
+		  "Pulso de gravedad",
+		  "Enemigos: ",
+          "Actúa como un piloto kamikaze. No tiene un cañón para disparar, pero inflige mucho daño al contacto con una nave.",
+          "Su nombre lo describe correctamente. Tiene mucha vida, es grande y dispara rápido, pero sus disparos no causan mucho daño.",
+          "Intenta mantener su distancia de la nave, lo que hace difícil golpearlo. Sus misiles causan mucho daño, pero tiene poca vida.",
+          "De vez en cuando aparecerá un MedKit en la pantalla, si el MedKit no es recogido dentro de unos segundos, aparecerá el Stealer y tratará de tomar el MedKit. Si lo recoges delante de él, o si él lo recoge, su diseño cambiará y actuará como un Zarovka.",
+		  "Gracias por jugar nuestro juego <3",
+		  "Atrás"
+        ]
+      },
+      "ship_select": {
+        "title": "Seleccionar Nave",
+        "content": [
+          "Vida: ",
+          "Daño:",
+          "Velocidad de Disparo:",
+          "Aceleración:",
+          "Velocidad: ",
+          "Q: ",
+          "E: ",
+		  "Embestida",
+		  "Escudo",
+		  "Disparo rápido",
+		  "Disparo explosivo",
+		  "Impulso de velocidad",
+		  "Pulso de gravedad"
+        ]
+      },
+      "pause": {
+        "title": "Pausa",
+        "content": ["Continuar", "Menú", "Salir", "Pulsar una tecla para continuar"]
+      },
+      "game_over": {
+        "title": "Fin del Juego",
+        "content": ["Puntuación:", "Guardar Nombre", "Nuevamente", "Menú", "Salir"]
+      },
+	  "upgrade": {
+		"content": ["Armas", "Refrig", "Escudo", "Regeneración", "Propulsor"]
+}
+    }
+  },
+  {
+  "language": "french",
+  "text": {
+    "main_menu": {
+      "title": "Menu Principal",
+      "content": ["Jouer", "Statistiques", "Sur le jeu", "Quitter", "Bande son par: Karl Casey @ White Bat Audio"]
+    },
+    "settings": {
+      "title": "Paramètres",
+      "content": ["Volume de la musique", "Volume des effets", "Clignotement de santé faible", "Vibration", "Retour"]
+    },
+    "statistics": {
+      "title": "Statistiques",
+      "content": ["Nom", "Score", "Vaisseau", "Date"]
+    },
+    "about_game": {
+      "title": "À propos du jeu",
+      "content": [
+        "Le jeu est un jeu de tir arcade en 2D. Le joueur contrôle un vaisseau spatial et doit le défendre contre les attaques ennemies. Le but est de marquer le plus de points possible.",
+        "A été créé comme projet de semestre dans le cadre de la matière KEP/VMZ à la Faculté de génie électrique de l'Université de Bohême de l'Ouest. La matière a eu lieu au semestre d'hiver de l'année académique 2023/24.",
+        "Équipe de développement :",
+        "Jan Sebele",
+        "Pavel Franek",
+        "Michal Lopata",
+        "Tomas Fikart",
+        "Contrôles",
+        "Mouvement",
+        "Visée",
+        "Tir",
+        "Compétences",
+        "Pause",
+        "Vaisseaux :",
+        "HP : ",
+        "DMG : ",
+        "Cadence de tir :",
+        "Accélération : ",
+        "Vitesse : ",
+        "Q :",
+        "E :",
+        "Évasion",
+        "Bouclier",
+        "Tir rapide",
+        "Tir explosif",
+        "Boost de vitesse",
+        "Pulsation de gravité",
+        "Ennemis : ",
+        "Il agit comme un pilote kamikaze. Il n'a pas de canon pour tirer, mais il inflige beaucoup de dégâts au contact d'un vaisseau.",
+        "Son nom le décrit correctement. Il a beaucoup de PV, il est gros, et il tire vite, mais ses tirs ne font pas beaucoup de dégâts.",
+        "Il essaie de maintenir sa distance par rapport au vaisseau, ce qui le rend difficile à toucher. Ses missiles infligent beaucoup de dégâts, mais il a peu de PV.",
+        "De temps en temps, un kit médical apparaîtra à l'écran. Si le kit médical n'est pas ramassé dans quelques secondes, le Voleur apparaîtra et essayera de prendre le kit médical. Si vous le ramassez devant lui, ou s'il le ramasse, sa conception changera et il agira comme un Zarovka.",
+        "Merci d'avoir joué à notre jeu <3",
+        "Retour"
+      ]
+    },
+    "ship_select": {
+      "title": "Sélection",
+      "content": [
+        "HP : ",
+        "DMG : ",
+        "Cadence de tir :",
+        "Accélération : ",
+        "Vitesse : ",
+        "Q :",
+        "E :",
+		"Évasion",
+        "Bouclier",
+        "Tir rapide",
+        "Tir explosif",
+        "Boost de vitesse",
+        "Pulsation de gravité"
+      ]
+    },
+    "pause": {
+      "title": "Pause",
+      "content": ["Reprendre", "Menu Principal", "Quitter", "Pressez une touche pour continuer"]
+    },
+    "game_over": {
+      "title": "Partie Terminée",
+      "content": ["Score : ", "Nom Sauvegarde", "Encore", "Menu Principal", "Quitter"]
+    },
+    "upgrade": {
+      "content": ["Armes", "Fraîcheur", "Bouclier", "Régénération", "Propulseur"]
+    }
+  }
+},
+{
+	"language": "german",
+	"text":{
+      "main_menu": {
+        "title": "Hauptmenü",
+        "content": ["Spielen", "Statistiken", "Das Spiel", "Beenden", "Soundtrack von: Karl Casey @ White Bat Audio"]
+      },
+      "settings": {
+        "title": "Einstellungen",
+        "content": ["Musik Lautstärke", "Effekte Lautstärke", "Farbwechsel bei niedriger Gesundheit", "Vibration", "Zurück"]
+      },
+      "statistics": {
+        "title": "Statistiken",
+        "content": ["Name", "Punktzahl", "Schiff", "Datum"]
+      },
+      "about_game": {
+        "title": "Das Spiel",
+        "content": [
+          "Das Spiel ist ein 2D-Arcade-Shooter. Der Spieler steuert ein Raumschiff und muss es gegen feindliche Angriffe verteidigen. Das Ziel ist es, so viele Punkte wie möglich zu erzielen.",
+          "Das Spiel wurde als Semesterprojekt im Fach KEP/VMZ an der Fakultät für Elektrotechnik der Westböhmischen Universität erstellt. Das Fach fand im Wintersemester des akademischen Jahres 2023/24 statt.",
+          "Entwicklungsteam: ",
+          "Jan Sebele",
+          "Pavel Franek",
+          "Michal Lopata",
+          "Tomas Fikart",
+          "Steuerung",
+          "Bewegung",
+          "Zielen",
+          "Schießen",
+          "Fähigkeiten",
+          "Pause",
+          "Schiffe: ",		  
+          "HP: ",
+          "Schaden: ",
+          "Feuerrate: ",
+          "Beschleunigung: ",
+          "Geschwindigkeit: ",
+          "Q: ",
+          "E: ",
+		  "Ausweichung",
+		  "Schild",
+		  "Schnellfeuer",
+		  "Explosionsschuss",
+		  "Geschwindigkeits-Boost",
+		  "Gravitationspuls",
+		  "Feinde: ",
+          "Die Zarovka ist ein Kamikaze-Pilot. Es hat keine Kanone zum Schießen, aber es verursacht viel Schaden bei Kontakt mit einem Schiff.",
+          "Sein Name beschreibt ihn richtig gut. Der Tank hat viele HP, es ist groß und es schießt schnell, aber seine Schüsse richten nicht viel Schaden an.",
+          "Der Sniper versucht, Abstand zum Schiff zu halten, was es schwer macht, ihn zu treffen. Die Raketen verursachen viel Schaden, aber der Sniper hat wenig HP.",
+          "Gelegentlich erscheint ein MedKit auf dem Bildschirm, wenn das MedKit nicht innerhalb weniger Sekunden aufgenommen wird, wird der Stealer erscheinen und versuchen, das MedKit zu nehmen. Wenn Sie es vor ihm aufheben oder wenn er es aufhebt, ändert sich sein Design und er wird sich wie eine Zarovka verhalten.",
+		  "Vielen Dank, dass Sie unser Spiel gespielt haben <3",
+		  "Zurück"
+        ]
+      },
+      "ship_select": {
+        "title": "Schiffsauswahl",
+        "content": [
+          "HP: ",
+          "Schaden: ",
+          "Feuerrate: ",
+          "Beschleunigung: ",
+          "Geschwindigkeit: ",
+          "Q: ",
+          "E: ",
+		  "Ausweichung",
+		  "Schild",
+		  "Schnellfeuer",
+		  "Explosionsschuss",
+		  "Geschwindigkeits-Boost",
+		  "Gravitationspuls"
+        ]
+      },
+      "pause": {
+        "title": "Pause",
+        "content": ["Fortsetzen", "Hauptmenü", "Beenden", "Drücken Sie eine Taste"]
+      },
+      "game_over": {
+        "title": "Spiel vorbei",
+        "content": ["Punktzahl: ", "Speichern", "Erneut Spielen", "Hauptmenü", "Beenden"]
+      },
+	  "upgrade": {
+		"content": ["Waffen", "Kühlung", "Schild", "Regeneration", "Schubdüse"]
+	}
+  }
+},
+{
+    "language": "cat",
+	"text":{
+      "main_menu": {
+        "title": "Mňanu",
+        "content": ["Mňanu", "Mňaustiky", "O mňoukání", "Domňoukat", "Mňautrack od: Karl MňauCasey @ White Bat Mňaudio"]
+      },
+      "settings": {
+        "title": "Mňaustavení",
+        "content": ["Mňaudba", "Mňaufekty", "Mňoukání při nízkém zdraví", "Mňaubrace", "Mňau"]
+      },
+      "statistics": {
+        "title": "Mňaustiky",
+        "content": ["Mňano", "Mňau Skóre", "MňauLoď", "Mňautum"]
+      },
+      "about_game": {
+        "title": "Mňau Hra",
+        "content": [
+          "Mňau je 2D mňoukací střílečka. Mňau hráč ovládá vesmírnou loď a musí ji bránit před útoky nepřátel. Mňau cílem je získat co nejvíce mňoukacích bodů.",
+          "Mňau vytvořeno jako semestrální projekt ve studijním předmětu KEP/VMZ na Fakultě Mňoukací Západočeské univerzity v Kočkově. Mňau předmět probíhal v zimním semestru mňoukacího roku 2023/24.",
+          "Mňoukací tým:",
+          "Jan Myšebele",
+          "Kocour Franěk",
+          "Mňauchal Lopata",
+          "Tomňaus Fikart",
+          "Vrnění",
+          "Zběsilost",
+          "Číhání",
+          "Mňouknutí",
+          "Kočičárny",
+          "Mňauza",
+          "Mňau Lodě: ",		  
+          "Devět životů: ",
+          "Mňauškození: ",
+          "Frekvence mňoukání:",
+          "Mňauchlení: ",
+          "Mňauchlost: ",
+          "Mňau Q:",
+          "Mňau E:",
+		  "Mňaútok",
+		  "Mňauu",
+		  "Rychlá mňaulba",
+		  "Mňau střelba",
+		  "Mňau Zrychlení",
+		  "Gravitační kočka",
+		  "Myši: ",
+          "Mňau jako kočičí pilot. Mňau Nemá dělo na střelbu, ale při kontaktu s lodí způsobí hodně poškození.",
+          "Mňau jeho jméno ho správně popisuje. Mňau Má hodně zdraví, je velký a střílí rychle, ale jeho střely nezpůsobují mnoho poškození.",
+          "Mňau se snaží udržovat odstup od lodi, což ho dělá obtížným k zasažení. Jeho mňoukání způsobují hodně poškození, ale nemá 9 životů.",
+          "Občas se na obrazovce objeví pastička se sýrem. Pokud sýr není během několika sekund sebrán, objeví se myška a pokusí se sýr ukrást. Pokud ho sníte před ním, nebo pokud ho vyzvedne, její vzhled se změní a bude se chovat jako kočka.",
+		  "Děkujeme, že si s námi mňouknete <3",
+		  "Mňau"
+        ]
+      },
+      "ship_select": {
+        "title": "Mňauběr lodi",
+        "content": [
+          "Devět životů: ",
+          "Mňauškození: ",
+          "Frekvence mňoukání:",
+          "Mňauchlení: ",
+          "Mňauchlost: ",
+          "Mňau Q:",
+          "Mňau E:",
+		  "Mňautok",
+		  "Mňauu",
+		  "Rychlá mňaulba",
+		  "Mňau střelba",
+		  "Mňau Zrychlení",
+		  "Gravitační kočka"
+        ]
+      },
+      "pause": {
+        "title": "Mňauza",
+        "content": ["Mňoukat", "Kočičí menu", "Domňoukat", "Mňoukněte pro pokračování"]
+      },
+      "game_over": {
+        "title": "Domňoukali jste",
+        "content": ["Mňau Skóre: ", "Myška?", "Zamňoukat", "Kocouří menu", "Domňoukat"]
+      },
+	  "upgrade": {
+		"content": ["Drápy", "Uši", "Chlupy", "Syčení", "Ocas"]
+}
+    }
+  }
+
+]

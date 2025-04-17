@@ -4,7 +4,8 @@ from os import getcwd
 from PyQt5.QtWidgets import QApplication, QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QMainWindow, QScrollArea, QDialog, QSlider, QLabel
 from PyQt5.QtGui import QIcon, QPixmap, QPainter, QTouchEvent, QMouseEvent, QFont, QFontDatabase, QFont
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
-from PyQt5.QtCore import QSize, Qt, QEvent, QUrl
+from PyQt5.QtCore import QSize, Qt, QEvent, QUrl, QTimer
+import pygame
 import subprocess
 import os
 
@@ -24,8 +25,8 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         super().__init__()
 
         # Window settings
-        self.window_width = 900
-        self.window_height = 720
+        self.window_width = 800
+        self.window_height = 450
         self.setFixedSize(self.window_width, self.window_height)             #Size of the window
         self.setWindowTitle('Handheld menu')    #Title of the window
         #self.setWindowFlags(Qt.FramelessWindowHint) # Hides all outlines and top bar of window
@@ -45,6 +46,8 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         self.background_music.setMedia(QMediaContent(QUrl.fromLocalFile(self.background_music_path)))
         self.background_music.setVolume(50)  # Base audio volume is 50
         self.background_music.play()  # Automatically starts the audio
+
+
 
         # Button audio (is supposed to play when someone hovers a button)
         self.button_sound = QMediaPlayer()
@@ -95,19 +98,16 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
 
         # List of menu icons
         self.lower_layout_icon = ['icons/SpaceShooterIcon.png',
-                      'icons/cube.png',
-                      'icons/reconstruction.png',
-                      'icons/reconstruction.png']  #paths to pictures used as buttons later in the code
+                      'icons/cube.png']  #paths to pictures used as buttons later in the code
         self.lower_layout_icon_count = len(self.lower_layout_icon) # number of icons in the list of lower layout
 
         # List of small buttons (icons)
         self.upper_layout_icon = ['icons/code.png',
-                            '/Users/tomasfikart/PycharmProjects/Handheld/gui/icons/settings_button1.png',
-                            'icons/reconstruction.png']  # Paths for small buttons
+                            '/Users/tomasfikart/PycharmProjects/Handheld/gui/icons/settings_button1.png']  # Paths for small buttons
         self.upper_layout_icon_count = len(self.upper_layout_icon)
 
         # List of games
-        self.games = ['../games/SpaceShooter/game_files/main.py', '../games/Tester/Handheld_tester.py', '',''] # source of the game .exe (indexes decides which one to start so order matters)
+        self.games = ['../games/SpaceShooter/main.py', '../games/Tester/Handheld_tester.py', '',''] # source of the game .exe (indexes decides which one to start so order matters)
 
         # List of menu buttons
         self.menu = ['../gui/Handheld.py',self.settings,''] # starts the code of the menu
@@ -208,7 +208,181 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
 
             # adding button to upper layout widget list
             upper_layout.addWidget(btn)
-    # On click event
+
+        # Controller setup
+        pygame.init()
+        pygame.joystick.init()
+        self.controller = None
+        self.current_button_index = 0
+        self.last_move_time = 0
+
+        # Controller input timer
+        self.controller_timer = QTimer(self)
+        self.controller_timer.timeout.connect(self.check_controller_input)
+        self.controller_timer.start(50)  # Check every 50ms
+
+    def setup_controller(self):
+        """Initialize the controller if connected"""
+        try:
+            pygame.joystick.quit()
+            pygame.joystick.init()
+
+            joystick_count = pygame.joystick.get_count()
+            if joystick_count > 0:
+                self.controller = pygame.joystick.Joystick(0)
+                self.controller.init()
+                print(f"Controller detected: {self.controller.get_name()}")
+                print(f"Axes: {self.controller.get_numaxes()}")
+                print(f"Buttons: {self.controller.get_numbuttons()}")
+                print(f"Hats: {self.controller.get_numhats()}")
+            else:
+                print("No controller detected")
+                self.controller = None
+        except Exception as e:
+            print(f"Controller init error: {e}")
+            self.controller = None
+
+    def check_controller_input(self):
+        """Check for controller input and handle navigation"""
+        if not self.controller:
+            self.setup_controller()
+            return
+
+        try:
+            # Process pygame events
+            for event in pygame.event.get():
+                pass  # Just clear the event queue
+
+            # Get controller axes
+            axis_0 = self.controller.get_axis(0)  # Left stick X
+            axis_1 = self.controller.get_axis(1)  # Left stick Y
+
+            # D-pad (hat)
+            hat_x, hat_y = 0, 0
+            if self.controller.get_numhats() > 0:
+                hat = self.controller.get_hat(0)
+                hat_x, hat_y = hat
+
+            # Apply deadzones
+            axis_0 = self.apply_deadzone(axis_0)
+            axis_1 = self.apply_deadzone(axis_1)
+
+            # PS4 controller buttons
+            button_x = self.controller.get_button(0) if self.controller.get_numbuttons() > 0 else False  # Square button
+            button_circle = self.controller.get_button(1) if self.controller.get_numbuttons() > 1 else False  # X button
+            button_square = self.controller.get_button(
+                2) if self.controller.get_numbuttons() > 2 else False  # Circle button
+            button_triangle = self.controller.get_button(
+                3) if self.controller.get_numbuttons() > 3 else False  # Triangle button
+
+            # Navigation with D-pad or left stick
+            move_threshold = 0.5
+            move_delay = 300  # ms
+            current_time = pygame.time.get_ticks()
+
+            if current_time - self.last_move_time > move_delay:
+                moved = False
+
+                # Left navigation
+                if axis_0 < -move_threshold or hat_x == -1:
+                    self.navigate_buttons(-1)
+                    moved = True
+                # Right navigation
+                elif axis_0 > move_threshold or hat_x == 1:
+                    self.navigate_buttons(1)
+                    moved = True
+
+                # Up navigation
+                if axis_1 < -move_threshold or hat_y == 1:
+                    self.navigate_vertical(-1)
+                    moved = True
+                # Down navigation
+                elif axis_1 > move_threshold or hat_y == -1:
+                    self.navigate_vertical(1)
+                    moved = True
+
+                if moved:
+                    self.last_move_time = current_time
+                    self.button_sound.play()
+
+            # Button presses
+            if button_x:  # X button for selection (PS4 button mapping)
+                self.buttons[self.current_button_index].click()
+
+        except Exception as e:
+            print(f"Controller error: {e}")
+            self.setup_controller()
+
+    def apply_deadzone(self, value, deadzone=0.2):
+        """Apply deadzone to analog stick values"""
+        if abs(value) < deadzone:
+            return 0
+        return value
+
+    def navigate_buttons(self, direction):
+        """Navigate horizontally between buttons"""
+        if not self.buttons:
+            return
+
+        # Remove highlight from current button
+        self.highlight_current_button(False)
+
+        # Calculate new index
+        self.current_button_index += direction
+        if self.current_button_index < 0:
+            self.current_button_index = len(self.buttons) - 1
+        elif self.current_button_index >= len(self.buttons):
+            self.current_button_index = 0
+
+        # Highlight new button
+        self.highlight_current_button(True)
+
+    def navigate_vertical(self, direction):
+        """Navigate vertically between button rows"""
+        if not self.buttons:
+            return
+
+        buttons_per_row = 2  # Adjust based on your layout
+        current_row = self.current_button_index // buttons_per_row
+        current_col = self.current_button_index % buttons_per_row
+
+        new_row = current_row + direction
+        rows = (len(self.buttons) + buttons_per_row - 1) // buttons_per_row
+
+        if new_row < 0:
+            new_row = rows - 1
+        elif new_row >= rows:
+            new_row = 0
+
+        new_index = new_row * buttons_per_row + current_col
+        if new_index >= len(self.buttons):
+            new_index = min(new_index, len(self.buttons) - 1)
+
+        # Remove highlight from current button
+        self.highlight_current_button(False)
+        self.current_button_index = new_index
+        self.highlight_current_button(True)
+
+    def highlight_current_button(self, highlight):
+        """Use existing hover animations for controller navigation"""
+        if hasattr(self, 'current_button_index') and self.buttons and 0 <= self.current_button_index < len(
+                self.buttons):
+            button = self.buttons[self.current_button_index]
+            if highlight:
+                # Use the same effect as hover enter
+                if self.current_button_index < len(self.lower_layout_icon):
+                    button.setIconSize(
+                        QSize(int(self.lower_button_icon_width * 1.2), int(self.lower_button_height * 1.2)))
+                else:
+                    button.setIconSize(
+                        QSize(int(self.upper_button_icon_width * 1.2), int(self.upper_button_icon_height * 1.2)))
+                self.button_sound.play()
+            else:
+                # Use the same effect as hover leave
+                if self.current_button_index < len(self.lower_layout_icon):
+                    button.setIconSize(QSize(self.lower_button_icon_width, self.lower_button_height))
+                else:
+                    button.setIconSize(QSize(self.upper_button_icon_width, self.upper_button_icon_height))
 
     def on_game_item_clicked(self, idx):
         game_path = self.games[idx]  # initialise index of the game
@@ -390,12 +564,21 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         self.background_music.setVolume(value)
 
     def background_music_controller(self):
-        if self.enum == 0:
+        if self.enum == 0:  # Menu
             self.background_music.play()
-        if self.enum == 1:
+            # Re-enable controller if it was disabled
+            if self.controller and not self.controller.get_init():
+                self.controller.init()
+        elif self.enum == 1:  # Game
             self.background_music.stop()
-        if self.enum == 2:
+            # Disable controller for game
+            if self.controller and self.controller.get_init():
+                self.controller.quit()
+        elif self.enum == 2:  # Settings
             self.background_music.play()
+            # Ensure controller is enabled for settings
+            if self.controller and not self.controller.get_init():
+                self.controller.init()
 
 # Main application
 if __name__ == '__main__':
