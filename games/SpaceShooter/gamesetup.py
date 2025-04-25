@@ -104,9 +104,9 @@ class GameSetup:
         background image.
         """
         pygame.display.set_caption('Space shooter')
-        screen = pygame.display.set_mode((cls.width, cls.height), pygame.FULLSCREEN)
         # screen = pygame.display.set_mode((800, 600))  # Pavel_odkomentovávám pouze proto, abych viděl řádek
-        cls.width, cls.height = pygame.display.Info().current_w, pygame.display.Info().current_h
+        cls.width, cls.height = 800,450
+        screen = pygame.display.set_mode((cls.width, cls.height))
         cls.screen = screen
         cls.hp_icon = pygame.image.load("assets/icons/bars/health_bar.png")
         cls.hp_icon = pygame.transform.scale_by(cls.hp_icon, 2 / 1920 * cls.width)
