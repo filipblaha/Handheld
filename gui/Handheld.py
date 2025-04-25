@@ -354,27 +354,42 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         self.highlight_current_button(True)
 
     def navigate_vertical(self, direction):
-        """Navigate vertically between button rows"""
+        """Navigate vertically between button rows with custom buttons per row"""
         if not self.buttons:
             return
 
-        buttons_per_row = 2  # Adjust based on your layout
-        current_row = self.current_button_index // buttons_per_row
-        current_col = self.current_button_index % buttons_per_row
+        # Předdefinované rozložení řádků (např. [2, 3, 1])
+        rows_layout = [2, 2]  # Upravte podle vašich potřeb
 
+        # Najděte aktuální řádek a sloupec
+        current_row = 0
+        remaining_index = self.current_button_index
+        for i, buttons_in_row in enumerate(rows_layout):
+            if remaining_index < buttons_in_row:
+                current_row = i
+                current_col = remaining_index
+                break
+            remaining_index -= buttons_in_row
+        else:
+            current_row = len(rows_layout) - 1
+            current_col = rows_layout[-1] - 1  # Poslední tlačítko v posledním řádku
+
+        # Vypočtěte nový řádek
         new_row = current_row + direction
-        rows = (len(self.buttons) + buttons_per_row - 1) // buttons_per_row
+        total_rows = len(rows_layout)
 
         if new_row < 0:
-            new_row = rows - 1
-        elif new_row >= rows:
-            new_row = 0
+            new_row = total_rows - 1  # Přetečení nahoru → poslední řádek
+        elif new_row >= total_rows:
+            new_row = 0  # Přetečení dolů → první řádek
 
-        new_index = new_row * buttons_per_row + current_col
-        if new_index >= len(self.buttons):
-            new_index = min(new_index, len(self.buttons) - 1)
+        # Omezení sloupce, pokud nový řádek má méně tlačítek
+        new_col = min(current_col, rows_layout[new_row] - 1)
 
-        # Remove highlight from current button
+        # Vypočtěte nový index
+        new_index = sum(rows_layout[:new_row]) + new_col
+
+        # Aktualizace zvýraznění
         self.highlight_current_button(False)
         self.current_button_index = new_index
         self.highlight_current_button(True)
