@@ -58,6 +58,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         self.button_sound.setVolume(50)  # Base audio volume is 50
 
         # Controller settings prep
+        self.typeof_volume = "button"
         self.button_volume_value = 0
         self.background_volume_value = 0
         self.volume_slider = 0
@@ -303,7 +304,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
 
                 # Navigation with left stick
                 move_threshold = 0.5
-                move_delay = 300  # ms
+                move_delay = 200 # ms
                 current_time = pygame.time.get_ticks()
 
             except Exception as e:
@@ -344,42 +345,32 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
                 if current_time - self.last_move_time > move_delay:
                     moved = False
 
-                    self.button_volume_value = self.button_volume_slider.value()
-                    self.background_volume_value = self.background_volume_slider.value()
-
-                    if self.volume_slider % 2 == 0:
-                        self.typeof_volume_value = self.button_volume_value
-                        moved = True
-                    else:
-                        self.typeof_volume_value = self.background_volume_value
-                        moved = True
-                    # Left navigation
-                    if self.left_joystick[0] < -move_threshold:
-                        self.typeof_volume_value = self.typeof_volume_value - 5
-                        if self.typeof_volume_value == self.button_volume_value:
-                            self.update_button_volume(self.typeof_volume_value)
-                        else:
-                            self.update_background_volume(self.typeof_volume_value)
-                        moved = True
-
-                    # Right navigation
-                    elif self.left_joystick[0] > move_threshold:
-                        self.typeof_volume_value = self.typeof_volume_value + 5
-                        if self.typeof_volume_value == self.background_volume_value:
-                            self.update_button_volume(self.typeof_volume_value)
-                        else:
-                            self.update_background_volume(self.typeof_volume_value)
-                        moved = True
-                    # Up navigation
                     if self.left_joystick[1] < -move_threshold:
-                        self.volume_slider = self.volume_slider + 1
+                        self.typeof_volume = "button"
                         moved = True
-                    # Down navigation
                     elif self.left_joystick[1] > move_threshold:
-                        self.volume_slider = self.volume_slider - 1
+                        self.typeof_volume = "background"
                         moved = True
-                    if self.circle_button:
-                        self.back_button.clicked.connect(self.show_main_menu)
+
+                    # Změna hlasitosti podle typu
+                    if self.left_joystick[0] < -move_threshold:
+                        if self.typeof_volume == "button":
+                            new_value = max(0, self.button_volume_slider.value() - 5)
+                            self.button_volume_slider.setValue(new_value)
+                        else:
+                            new_value = max(0, self.background_volume_slider.value() - 5)
+                            self.background_volume_slider.setValue(new_value)
+                        moved = True
+
+                    elif self.left_joystick[0] > move_threshold:
+                        if self.typeof_volume == "button":
+                            new_value = min(100, self.button_volume_slider.value() + 5)
+                            self.button_volume_slider.setValue(new_value)
+                        else:
+                            new_value = min(100, self.background_volume_slider.value() + 5)
+                            self.background_volume_slider.setValue(new_value)
+                        moved = True
+
                     if moved:
                         self.last_move_time = current_time
 
