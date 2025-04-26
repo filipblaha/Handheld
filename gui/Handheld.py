@@ -1,5 +1,6 @@
 import sys
 from os import getcwd
+from tkinter import XView
 
 from PyQt5.QtWidgets import QApplication, QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QMainWindow, QScrollArea, QDialog, QSlider, QLabel
 from PyQt5.QtGui import QIcon, QPixmap, QPainter, QTouchEvent, QMouseEvent, QFont, QFontDatabase, QFont
@@ -8,6 +9,7 @@ from PyQt5.QtCore import QSize, Qt, QEvent, QUrl, QTimer
 import pygame
 import subprocess
 import os
+#import joystick_control
 
 # Here’s how the layers work together in a PyQt5 application:
 #
@@ -55,6 +57,10 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         self.button_sound.setMedia(QMediaContent(QUrl.fromLocalFile(self.button_sound_path)))
         self.button_sound.setVolume(50)  # Base audio volume is 50
 
+        # Controller settings prep
+        self.button_volume_value = 0
+        self.background_volume_value = 0
+        self.volume_slider = 0
 
         # code enabling to be controlled by touch (touch screen support)
         self.setAttribute(Qt.WA_AcceptTouchEvents, True)
@@ -102,15 +108,14 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         self.lower_layout_icon_count = len(self.lower_layout_icon) # number of icons in the list of lower layout
 
         # List of small buttons (icons)
-        self.upper_layout_icon = ['icons/code.png',
-                            '/Users/tomasfikart/PycharmProjects/Handheld/gui/icons/settings_button1.png']  # Paths for small buttons
+        self.upper_layout_icon = ['/Users/tomasfikart/PycharmProjects/Handheld/gui/icons/settings_button1.png']  # Paths for small buttons
         self.upper_layout_icon_count = len(self.upper_layout_icon)
 
         # List of games
-        self.games = ['../games/SpaceShooter/main.py', '../games/Tester/Handheld_tester.py', '',''] # source of the game .exe (indexes decides which one to start so order matters)
+        self.games = ['../games/SpaceShooter/main.py', '../games/Tester/Handheld_tester.py'] # source of the game .exe (indexes decides which one to start so order matters)
 
         # List of menu buttons
-        self.menu = ['../gui/Handheld.py',self.settings,''] # starts the code of the menu
+        self.menu = [self.settings] # starts the code of the menu
 
         # font setup
         os.chdir(self.gui_path)
@@ -225,6 +230,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         self.pygame_initialized = False
         self.init_pygame()
 
+
     def init_pygame(self):
         """Initialize pygame only for controller support"""
         try:
@@ -237,97 +243,149 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
             self.pygame_initialized = False
 
     def setup_controller(self):
-        """Initialize the controller if connected"""
-        if not self.pygame_initialized:
-            self.init_pygame()
+            """Initialize the controller if connected"""
             if not self.pygame_initialized:
-                return None
+                self.init_pygame()
+                if not self.pygame_initialized:
+                    return None
 
-        try:
-            pygame.joystick.quit()  # Clean up first
-            pygame.joystick.init()
+            try:
+                pygame.joystick.quit()  # Clean up first
+                pygame.joystick.init()
 
-            joystick_count = pygame.joystick.get_count()
-            if joystick_count > 0:
-                controller = pygame.joystick.Joystick(0)
-                controller.init()
-                print(f"Controller detected: {controller.get_name()}")
-                return controller
-        except Exception as e:
-            print(f"Controller init error: {e}")
-        return None
+                joystick_count = pygame.joystick.get_count()
+                if joystick_count > 0:
+                    controller = pygame.joystick.Joystick(0)
+                    controller.init()
+                    print(f"Controller detected: {controller.get_name()}")
+                    return controller
+            except Exception as e:
+                print(f"Controller init error: {e}")
+            return None
 
     def check_controller_input(self):
-        """Check for controller input and handle navigation"""
-        if not hasattr(self, 'controller') or self.controller is None:
-            self.controller = self.setup_controller()
-            if self.controller is None:
-                return
+            """Check for controller input and handle navigation"""
+            if not hasattr(self, 'controller') or self.controller is None:
+                self.controller = self.setup_controller()
+                if self.controller is None:
+                    return
 
-        try:
-            # Process pygame events to keep the queue clear
-            for event in pygame.event.get():
-                pass
+            try:
+                # Process pygame events to keep the queue clear
+                for event in pygame.event.get():
+                    pass
 
-            # Get controller axes
-            axis_0 = self.controller.get_axis(0)  # Left stick X
-            axis_1 = self.controller.get_axis(1)  # Left stick Y
+                # control
+                # joysticks
+                self.left_joystick = (self.controller.get_axis(0), self.controller.get_axis(1))
+                self.right_joystick = (self.controller.get_axis(2), self.controller.get_axis(3))
 
-            # D-pad (hat)
-            hat_x, hat_y = 0, 0
-            if self.controller.get_numhats() > 0:
-                hat = self.controller.get_hat(0)
-                hat_x, hat_y = hat
+                # L2/R2
+                self.L2 = self.controller.get_axis(4)
+                self.R2 = self.controller.get_axis(5)
 
-            # Apply deadzones
-            axis_0 = self.apply_deadzone(axis_0)
-            axis_1 = self.apply_deadzone(axis_1)
+                # buttons
+                self.cross_button = self.controller.get_button(0)
+                self.circle_button = self.controller.get_button(1)
+                self.square_button = self.controller.get_button(2)
+                self.triangle_button = self.controller.get_button(3)
+                self.options_button = self.controller.get_button(6)
+                self.L1 = self.controller.get_button(9)
+                self.R1 = self.controller.get_button(10)
+                self.arrow_up = self.controller.get_button(11)
+                self.arrow_down = self.controller.get_button(12)
+                self.arrow_left = self.controller.get_button(13)
+                self.arrow_right = self.controller.get_button(14)
 
-            # PS4 controller buttons
-            button_x = self.controller.get_button(0) if self.controller.get_numbuttons() > 0 else False  # Square button
-            button_circle = self.controller.get_button(1) if self.controller.get_numbuttons() > 1 else False  # X button
-            button_square = self.controller.get_button(
-                2) if self.controller.get_numbuttons() > 2 else False  # Circle button
-            button_triangle = self.controller.get_button(
-                3) if self.controller.get_numbuttons() > 3 else False  # Triangle button
+                # Apply deadzones
+                self.apply_deadzone(self.right_joystick[0]),self.apply_deadzone(self.right_joystick[1])
+                self.apply_deadzone(self.left_joystick[0]),self.apply_deadzone(self.left_joystick[1])
 
-            # Navigation with D-pad or left stick
-            move_threshold = 0.5
-            move_delay = 300  # ms
-            current_time = pygame.time.get_ticks()
+                # Navigation with left stick
+                move_threshold = 0.5
+                move_delay = 300  # ms
+                current_time = pygame.time.get_ticks()
 
-            if current_time - self.last_move_time > move_delay:
-                moved = False
+            except Exception as e:
+                print(f"Controller input error: {e}")
 
-                # Left navigation
-                if axis_0 < -move_threshold or hat_x == -1:
-                    self.navigate_buttons(-1)
-                    moved = True
-                # Right navigation
-                elif axis_0 > move_threshold or hat_x == 1:
-                    self.navigate_buttons(1)
-                    moved = True
+            if self.enum == 0:
+                if current_time - self.last_move_time > move_delay:
+                    moved = False
 
-                # Up navigation
-                if axis_1 < -move_threshold or hat_y == 1:
-                    self.navigate_vertical(-1)
-                    moved = True
-                # Down navigation
-                elif axis_1 > move_threshold or hat_y == -1:
-                    self.navigate_vertical(1)
-                    moved = True
+                    # Left navigation
+                    if self.left_joystick[0] < -move_threshold:
+                        self.navigate_buttons(-1)
+                        moved = True
+                    # Right navigation
+                    elif self.left_joystick[0] > move_threshold:
+                        self.navigate_buttons(1)
+                        moved = True
+                    # Up navigation
+                    if self.left_joystick[1] < -move_threshold:
+                        self.navigate_vertical(-1)
+                        moved = True
+                    # Down navigation
+                    elif self.left_joystick[1] > move_threshold:
+                        self.navigate_vertical(1)
+                        moved = True
 
-                if moved:
-                    self.last_move_time = current_time
-                    self.button_sound.play()
+                    if moved:
+                        self.last_move_time = current_time
+                        self.button_sound.play()
 
-            # Button presses
-            if button_x:  # X button for selection (PS4 button mapping)
-                self.buttons[self.current_button_index].click()
+                # Button presses
+                if self.cross_button:  # X button for selection (PS4 button mapping)
+                    self.buttons[self.current_button_index].click()
+                if self.options_button:
+                    self.on_menu_item_clicked(0)
 
-        except Exception as e:
-            print(f"Controller error: {e}")
-            self.setup_controller()
+            if self.enum == 2:
+                if current_time - self.last_move_time > move_delay:
+                    moved = False
+
+                    self.button_volume_value = self.button_volume_slider.value()
+                    self.background_volume_value = self.background_volume_slider.value()
+
+                    if self.volume_slider % 2 == 0:
+                        self.typeof_volume_value = self.button_volume_value
+                        moved = True
+                    else:
+                        self.typeof_volume_value = self.background_volume_value
+                        moved = True
+                    # Left navigation
+                    if self.left_joystick[0] < -move_threshold:
+                        self.typeof_volume_value = self.typeof_volume_value - 5
+                        if self.typeof_volume_value == self.button_volume_value:
+                            self.update_button_volume(self.typeof_volume_value)
+                        else:
+                            self.update_background_volume(self.typeof_volume_value)
+                        moved = True
+
+                    # Right navigation
+                    elif self.left_joystick[0] > move_threshold:
+                        self.typeof_volume_value = self.typeof_volume_value + 5
+                        if self.typeof_volume_value == self.background_volume_value:
+                            self.update_button_volume(self.typeof_volume_value)
+                        else:
+                            self.update_background_volume(self.typeof_volume_value)
+                        moved = True
+                    # Up navigation
+                    if self.left_joystick[1] < -move_threshold:
+                        self.volume_slider = self.volume_slider + 1
+                        moved = True
+                    # Down navigation
+                    elif self.left_joystick[1] > move_threshold:
+                        self.volume_slider = self.volume_slider - 1
+                        moved = True
+                    if self.circle_button:
+                        self.back_button.clicked.connect(self.show_main_menu)
+                    if moved:
+                        self.last_move_time = current_time
+
+                if self.circle_button:
+                    self.back_button.click()
+
 
     def apply_deadzone(self, value, deadzone=0.2):
         """Apply deadzone to analog stick values"""
@@ -358,8 +416,8 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         if not self.buttons:
             return
 
-        # Předdefinované rozložení řádků (např. [2, 3, 1])
-        rows_layout = [2, 2]  # Upravte podle vašich potřeb
+        # Předdefinované rozložení řádků (např. [2, 2])
+        rows_layout = [self.lower_layout_icon_count, self.upper_layout_icon_count]  # Upravte podle vašich potřeb
 
         # Najděte aktuální řádek a sloupec
         current_row = 0
@@ -432,6 +490,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         menu_action = self.menu[idx]  # initialise index of the game
         try:
             if callable(menu_action):
+                self.enum =2
                 menu_action()
             else:
                 self.enum = 2
@@ -443,22 +502,6 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
                 self.background_music_controller()
         except Exception as e: # in case of error
             print(f"Chyba při spuštění menu: {e}")
-
-    # defining actions performed by style of touch (touch screen support)
-    def touchEvent(self, event: QTouchEvent):
-        for touch_point in event.touchPoints():
-            # performs this code on press of finger
-            if touch_point.state() == Qt.TouchPointPressed:
-                mouse_event_press = QMouseEvent(QEvent.Type.MouseButtonPress, touch_point.pos(), Qt.LeftButton,
-                                                Qt.LeftButton, Qt.NoModifier)
-                QApplication.sendEvent(self, mouse_event_press)
-            # performs this code on release of finger
-            elif touch_point.state() == Qt.TouchPointReleased:
-                mouse_event_release = QMouseEvent(QEvent.Type.MouseButtonRelease, touch_point.pos(), Qt.LeftButton,
-                                                  Qt.LeftButton, Qt.NoModifier)
-                QApplication.sendEvent(self, mouse_event_release)
-            # scrolling through is coded somewhere else cause its easier
-        event.accept()  # Mark the event as handled
 
     # Entry animation on hover
     def on_lower_hover_enter(self, button):
@@ -480,6 +523,22 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
     def on_upper_hover_leave(self, button):
         button.setIconSize(QSize(self.upper_button_icon_width, self.upper_button_icon_height))  # Reverts the icon to the original size
         button.setStyleSheet("background-color: transparent;")  # options to change background
+
+    # defining actions performed by style of touch (touch screen support)
+    def touchEvent(self, event: QTouchEvent):
+        for touch_point in event.touchPoints():
+            # performs this code on press of finger
+            if touch_point.state() == Qt.TouchPointPressed:
+                mouse_event_press = QMouseEvent(QEvent.Type.MouseButtonPress, touch_point.pos(), Qt.LeftButton,
+                                                Qt.LeftButton, Qt.NoModifier)
+                QApplication.sendEvent(self, mouse_event_press)
+            # performs this code on release of finger
+            elif touch_point.state() == Qt.TouchPointReleased:
+                mouse_event_release = QMouseEvent(QEvent.Type.MouseButtonRelease, touch_point.pos(), Qt.LeftButton,
+                                                  Qt.LeftButton, Qt.NoModifier)
+                QApplication.sendEvent(self, mouse_event_release)
+            # scrolling through is coded somewhere else cause its easier
+        event.accept()  # Mark the event as handled
 
     # Method for painting the background
     def paintEvent(self, event):
@@ -585,6 +644,8 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         # Show all main menu buttons
         for button in self.buttons:
             button.show()
+        self.enum = 0
+
 
     # Volume update methods for sliders
     def update_button_volume(self, value):
@@ -593,6 +654,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
 
     def update_background_volume(self, value):
         self.background_music.setVolume(value)
+        print(f"Background volume set to: {value}")
 
     def background_music_controller(self):
         if self.enum == 0:  # Menu
