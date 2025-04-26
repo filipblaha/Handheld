@@ -9,7 +9,6 @@ from PyQt5.QtCore import QSize, Qt, QEvent, QUrl, QTimer
 import pygame
 import subprocess
 import os
-#import joystick_control
 
 # Here’s how the layers work together in a PyQt5 application:
 #
@@ -460,7 +459,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
                 # Use the same effect as hover enter
                 if self.current_button_index < len(self.lower_layout_icon):
                     button.setIconSize(
-                        QSize(int(self.lower_button_icon_width * 1.2), int(self.lower_button_height * 1.2)))
+                        QSize(int(self.lower_button_icon_width * 1.2), int(self.lower_button_icon_height * 1.2)))
                 else:
                     button.setIconSize(
                         QSize(int(self.upper_button_icon_width * 1.2), int(self.upper_button_icon_height * 1.2)))
@@ -468,7 +467,7 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
             else:
                 # Use the same effect as hover leave
                 if self.current_button_index < len(self.lower_layout_icon):
-                    button.setIconSize(QSize(self.lower_button_icon_width, self.lower_button_height))
+                    button.setIconSize(QSize(self.lower_button_icon_width, self.lower_button_icon_height))
                 else:
                     button.setIconSize(QSize(self.upper_button_icon_width, self.upper_button_icon_height))
 
@@ -504,13 +503,13 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
 
     # Entry animation on hover
     def on_lower_hover_enter(self, button):
-        button.setIconSize(QSize(int(self.lower_button_icon_width*1.2), int(self.lower_button_height*1.2)))  # Enlarges icon
+        button.setIconSize(QSize(int(self.lower_button_icon_width*1.2), int(self.lower_button_icon_height*1.2)))  # Enlarges icon
         button.setStyleSheet("background-color: transparent;")  # options to change background
         self.button_sound.play()
 
     # Leave animation on hover
     def on_lower_hover_leave(self, button):
-        button.setIconSize(QSize(self.lower_button_icon_width, self.lower_button_height))  # Reverts the icon to the original size
+        button.setIconSize(QSize(self.lower_button_icon_width, self.lower_button_icon_height))  # Reverts the icon to the original size
         button.setStyleSheet("background-color: transparent;")  # options to change background
 
     def on_upper_hover_enter(self, button):
