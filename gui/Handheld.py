@@ -48,8 +48,8 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         self.background_music.setMedia(QMediaContent(QUrl.fromLocalFile(self.background_music_path)))
         self.background_music.setVolume(50)  # Base audio volume is 50
         self.background_music.play()  # Automatically starts the audio
-
-
+        # Connect mediaStatusChanged signal
+        self.background_music.mediaStatusChanged.connect(self.handle_music_status)
 
         # Button audio (is supposed to play when someone hovers a button)
         self.button_sound = QMediaPlayer()
@@ -231,6 +231,9 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
         self.pygame_initialized = False
         self.init_pygame()
 
+    def handle_music_status(self, status):
+        if status == QMediaPlayer.EndOfMedia:
+            self.background_music.play()  # Restart the music
 
     def init_pygame(self):
         """Initialize pygame only for controller support"""
@@ -315,19 +318,19 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
                     moved = False
 
                     # Left navigation
-                    if self.left_joystick[0] < -move_threshold:
+                    if self.left_joystick[0] < -move_threshold or self.arrow_left == True:
                         self.navigate_buttons(-1)
                         moved = True
                     # Right navigation
-                    elif self.left_joystick[0] > move_threshold:
+                    elif self.left_joystick[0] > move_threshold or self.arrow_right == True:
                         self.navigate_buttons(1)
                         moved = True
                     # Up navigation
-                    if self.left_joystick[1] < -move_threshold:
+                    if self.left_joystick[1] < -move_threshold or self.arrow_up == True:
                         self.navigate_vertical(-1)
                         moved = True
                     # Down navigation
-                    elif self.left_joystick[1] > move_threshold:
+                    elif self.left_joystick[1] > move_threshold or self.arrow_down == True:
                         self.navigate_vertical(1)
                         moved = True
 
@@ -344,16 +347,20 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
             if self.enum == 2:
                 if current_time - self.last_move_time > move_delay:
                     moved = False
-
-                    if self.left_joystick[1] < -move_threshold:
+                    #Joystick up
+                    if self.left_joystick[1] < -move_threshold or self.arrow_up == True:
                         self.typeof_volume = "button"
                         moved = True
-                    elif self.left_joystick[1] > move_threshold:
+
+                    #Joystick down
+                    elif self.left_joystick[1] > move_threshold or self.arrow_down == True:
                         self.typeof_volume = "background"
                         moved = True
 
                     # Změna hlasitosti podle typu
-                    if self.left_joystick[0] < -move_threshold:
+
+                    #Joystick left
+                    if self.left_joystick[0] < -move_threshold or self.arrow_left == True:
                         if self.typeof_volume == "button":
                             new_value = max(0, self.button_volume_slider.value() - 5)
                             self.button_volume_slider.setValue(new_value)
@@ -362,7 +369,8 @@ class HandheldMenu(QMainWindow): # creates class with QMainWindow being its moth
                             self.background_volume_slider.setValue(new_value)
                         moved = True
 
-                    elif self.left_joystick[0] > move_threshold:
+                    #Joystick right
+                    elif self.left_joystick[0] > move_threshold or self.arrow_right == True:
                         if self.typeof_volume == "button":
                             new_value = min(100, self.button_volume_slider.value() + 5)
                             self.button_volume_slider.setValue(new_value)
